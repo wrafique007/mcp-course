@@ -44,13 +44,11 @@
   - local: unit3/mcp-ecosystem
     title: Navigating the MCP Ecosystem
   - local: unit3/gradio-mcp
-    title: "Hugging Face Gradio MCP Integration"
+    title: Gradio MCP Integration
   - local: unit3/hub-mcp-servers
-    title: "Working with MCP Servers on Hugging Face Hub"
-  - local: unit3/tiny-agents-mcp
-    title: "Building with Tiny Agents and MCP"
+    title: MCP Servers on Hugging Face Hub
   - local: unit3/practical-exercise
-    title: "Practical Exercise: MCP Interaction Walkthrough"
+    title: Practical Exercise on MCP Interaction Walkthrough
   - local: unit3/quiz
     title: Unit 3 Quiz
 
