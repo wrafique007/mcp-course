@@ -1,0 +1,18 @@
+- title: 4. Advanced Topics, Security, and the Future of MCP
+  sections:
+  - local: unit4/introduction
+    title: Introduction
+  - local: unit4/advanced-features
+    title: Exploring Advanced MCP Features
+  - local: unit4/security
+    title: Security Deep Dive - Threats and Mitigation Strategies
+  - local: unit4/limitations
+    title: Limitations, Challenges, and Comparisons
+  - local: unit4/huggingface-ecosystem
+    title: Hugging Face's Ecosystem and Future Contributions
+  - local: unit4/future
+    title: The Future of MCP - Roadmap and Standardization
+  - local: unit4/final-project
+    title: Final Project - Building a Complete MCP Application
+  - local: unit4/certification
+    title: Certification and Next Steps 

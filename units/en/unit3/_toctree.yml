@@ -1,0 +1,24 @@
+- title: "3. Building with MCP: Practical Development"
+  sections:
+  - local: unit3/introduction
+    title: Introduction
+  - local: unit3/environment-setup
+    title: Setting Up Your Development Environment & SDKs
+  - local: unit3/building-server
+    title: Building Your First MCP Server
+  - local: unit3/server-capabilities
+    title: Implementing Server Capabilities
+  - local: unit3/developing-clients
+    title: Developing MCP Clients
+  - local: unit3/configuration
+    title: Configuration, Authentication, and Debugging
+  - local: unit3/mcp-ecosystem
+    title: Navigating the MCP Ecosystem
+  - local: unit3/gradio-mcp
+    title: "Hugging Face Gradio MCP Integration"
+  - local: unit3/hub-mcp-servers
+    title: "Working with MCP Servers on Hugging Face Hub"
+  - local: unit3/practical-exercise
+    title: "Practical Exercise: MCP Interaction Walkthrough"
+  - local: unit3/quiz
+    title: Unit 3 Quiz 

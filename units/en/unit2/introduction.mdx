@@ -1,0 +1,45 @@
+# Understanding MCP Architecture and Core Concepts
+
+Welcome to Unit 2 of the MCP Course! In this unit, we'll dive deeper into the technical architecture and core concepts of the Model Context Protocol.
+
+## What You Will Learn
+
+In this unit, you will:
+
+* Understand the client-server architecture of MCP and the roles of Hosts, Clients, and Servers
+* Learn about MCP's core primitives: Tools, Resources, Prompts, and Sampling
+* Explore the communication protocols that power MCP interactions
+* Trace through a complete MCP interaction lifecycle
+* Understand how these architectural components work together in real implementations
+
+By the end of this unit, you'll have a comprehensive understanding of MCP's technical foundation, enabling you to build and integrate MCP components effectively.
+
+## Why Architecture Matters
+
+Understanding the architecture of MCP is crucial for several reasons:
+
+* **Effective Implementation**: A clear mental model of how MCP components interact allows you to implement or integrate MCP correctly.
+* **Troubleshooting**: Knowledge of the architecture helps you diagnose and fix issues when they arise.
+* **Design Decisions**: Understanding the "why" behind MCP's design helps you make appropriate decisions for your use case.
+* **Security Considerations**: The architecture has implications for security that are essential to understand before deployment.
+* **Performance Optimization**: Knowing how data flows through MCP helps optimize for performance.
+
+## The Components We'll Explore
+
+MCP's architecture consists of several key components that work together to enable AI models to access external context and capabilities. In this unit, we'll examine:
+
+1. **Client-Server Architecture**: The foundational structure of MCP, including Hosts (the AI applications), Clients (protocol handlers within hosts), and Servers (providing capabilities).
+
+2. **Core Primitives**: The fundamental building blocks of MCP interactions:
+   - Tools: Executable functions the model can call
+   - Resources: Data sources the application can access
+   - Prompts: Pre-defined templates or workflows
+   - Sampling: Server-initiated model interactions
+
+3. **Communication Protocols**: The standardized methods for exchanging information:
+   - JSON-RPC: The message format for requests, responses, and notifications
+   - Transports: stdio (for local servers) and HTTP+SSE/Streamable HTTP (for remote servers)
+
+4. **Interaction Lifecycle**: The sequence of steps in an MCP interaction, from initialization to termination.
+
+Let's begin our exploration of MCP's architecture and core concepts, which will provide the foundation for the practical development we'll cover in Unit 3. 

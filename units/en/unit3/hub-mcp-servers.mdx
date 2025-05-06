@@ -1,0 +1,154 @@
+# Working with MCP Servers on Hugging Face Hub
+
+The Hugging Face Hub provides a centralized platform for discovering, sharing, and deploying MCP servers. This ecosystem approach dramatically simplifies working with MCP by providing a community-driven repository of reusable components.
+
+## The MCP Server Ecosystem on Hugging Face
+
+The Hugging Face Hub hosts a growing collection of MCP servers covering various functionalities:
+
+- **Data Access Servers**: For accessing files, databases, and APIs
+- **Tool Servers**: Providing utilities like code execution, data analysis, and web browsing
+- **Integration Servers**: Connecting to third-party services like Slack, GitHub, and Google Workspace
+- **Specialized Servers**: For domain-specific tasks like image generation, document processing, and more
+
+This shared ecosystem eliminates the need to build common MCP servers from scratch, allowing developers to focus on their unique application requirements.
+
+## Finding MCP Servers on the Hub
+
+### Searching for MCP Servers
+
+You can discover MCP servers on the Hugging Face Hub using:
+
+1. **The Hub Search**: Visit [huggingface.co](https://huggingface.co) and search for "mcp-server" or specific functionality like "mcp-server-github"
+2. **Tags**: Browse servers tagged with "mcp", "mcp-server", or related categories
+3. **Collections**: Explore curated collections of MCP servers for specific domains or use cases
+
+### MCP Server Cards
+
+Each MCP server on the Hub includes a detailed card with:
+
+- **Description**: Overview of the server's functionality
+- **Installation Instructions**: How to set up and run the server
+- **Configuration Options**: Available settings and their default values
+- **Authentication Requirements**: Details on required credentials or tokens
+- **Examples**: Sample code for integrating the server into your applications
+- **Limitations**: Known issues or constraints
+
+These cards make it easy to evaluate and compare different servers to find the one that best meets your needs.
+
+## Using Hub MCP Servers in Your Projects
+
+### Installation
+
+Most Hub MCP servers can be installed via pip:
+
+```bash
+pip install "mcp-server-github @ git+https://huggingface.co/mcp-servers/github.git"
+```
+
+Or cloned directly:
+
+```bash
+git clone https://huggingface.co/mcp-servers/github
+cd github
+pip install -e .
+```
+
+### Basic Usage
+
+Once installed, you can use a Hub MCP server like any other MCP server:
+
+```python
+# Python example using a GitHub MCP server from the Hub
+from mcp.client import McpClient
+from mcp_server_github import GitHubMcpServer
+
+# Start the server
+server = GitHubMcpServer(
+    auth_token="your_github_token",
+    repo_owner="your_username",
+    repo_name="your_repo"
+)
+server.start()
+
+# Connect a client
+client = McpClient("github")
+client.connect_to_server_stdio(server.get_stdio_connection())
+
+# List available tools
+tools = client.list_tools()
+print(f"Available tools: {[tool.name for tool in tools]}")
+
+# Call a tool
+result = client.call_tool("create_issue", {
+    "title": "Test issue",
+    "body": "This is a test issue created via MCP"
+})
+print(f"Issue created: {result}")
+```
+
+### Configuration
+
+Hub MCP servers typically offer various configuration options:
+
+```python
+# Example with comprehensive configuration
+server = FileSystemMcpServer(
+    root_directory="/path/to/files",
+    allowed_extensions=[".txt", ".md", ".py"],
+    read_only=True,
+    max_file_size=10_000_000,  # 10MB
+    concurrency_limit=5
+)
+```
+
+The specific options available depend on the server, but they are documented in the server's Hub card and README.
+
+## Contributing MCP Servers to the Hub
+
+### Creating a New MCP Server
+
+If you've developed an MCP server that might be useful to others, sharing it on the Hub is straightforward:
+
+1. **Prepare Your Code**: Ensure your server is well-documented and follows MCP best practices
+2. **Create a Repository**: Set up a new repository on the Hugging Face Hub using the web interface or the `huggingface-cli`
+3. **Push Your Code**: Upload your server code to the repository
+4. **Add a README**: Create a detailed README.md describing your server, its functionality, and usage instructions
+5. **Add Tags**: Tag your repository with "mcp", "mcp-server", and other relevant tags
+
+### Best Practices for Hub MCP Servers
+
+When contributing to the Hub, follow these best practices:
+
+1. **Standardized Structure**: Use a consistent project structure with a clear entry point
+2. **Comprehensive Documentation**: Document all functionality, configuration options, and examples
+3. **Error Handling**: Implement robust error handling and meaningful error messages
+4. **Security Considerations**: Document security implications and recommended precautions
+5. **Version Management**: Use semantic versioning and maintain a changelog
+6. **Tests**: Include tests to verify functionality and prevent regressions
+
+Following these practices ensures your server is accessible and useful to the community.
+
+## Example: Deploying a Hub MCP Server to Spaces
+
+You can deploy MCP servers from the Hub to Hugging Face Spaces for easy access:
+
+1. **Create a New Space**: Set up a Space using the Gradio or Streamlit framework
+2. **Install the Server**: Add the server as a dependency in your requirements.txt
+3. **Create a Web Interface**: Build a simple UI for configuring and using the server
+4. **Deploy**: Push your code to the Space
+
+This approach allows you to provide a user-friendly interface for your MCP server, making it accessible to users who may not be comfortable with command-line tools.
+
+## Community Collaboration on MCP Servers
+
+The Hugging Face Hub facilitates collaboration on MCP servers through:
+
+1. **Discussions**: Engage with other developers on server functionality and improvements
+2. **Pull Requests**: Contribute enhancements or fixes to existing servers
+3. **Issue Tracking**: Report and track bugs or feature requests
+4. **Version History**: View changes over time and roll back to previous versions if needed
+
+This collaborative environment accelerates the development and refinement of MCP servers, benefiting the entire community.
+
+In the next section, we'll explore building with Tiny Agents and MCP, combining efficient agent architectures with the power of external tools. 
