@@ -1,3 +1,129 @@
 # Understanding MCP Capabilities
 
-This is a placeholder for the Understanding MCP Capabilities section. 
+MCP Servers expose a variety of capabilities to Clients through the communication protocol. These capabilities fall into four main categories, each with distinct characteristics and use cases. Let's explore these core primitives that form the foundation of MCP's functionality.
+
+## Core Primitives
+
+### Tools (Model-controlled)
+
+Tools are executable functions or actions that the AI model can invoke through the MCP protocol.
+
+- **Control**: Tools are typically **model-controlled**, meaning the AI model (LLM) decides when to call them based on the user's request and context.
+- **Nature**: They represent operations that can perform actions, such as creating, updating, or retrieving data.
+- **Safety**: Due to their ability to perform actions with side effects, tool execution typically requires explicit user approval.
+- **Use Cases**: Sending messages, creating tickets, querying APIs, performing calculations.
+
+**Example**: A weather tool that fetches current weather data for a given location:
+
+```python
+@mcp.tool()
+def get_weather(location: str) -> dict:
+    """Get the current weather for a specified location."""
+    # Connect to weather API and fetch data
+    return {
+        "temperature": 72,
+        "conditions": "Sunny",
+        "humidity": 45
+    }
+```
+
+### Resources (Application-controlled)
+
+Resources provide read-only access to data sources, allowing the AI model to retrieve context without executing complex logic.
+
+- **Control**: Resources are **application-controlled**, meaning the Host application typically decides when to access them.
+- **Nature**: They are designed for data retrieval with minimal computation, similar to GET endpoints in REST APIs.
+- **Safety**: Since they are read-only, they typically present lower security risks than Tools.
+- **Use Cases**: Accessing file contents, retrieving database records, reading configuration information.
+
+**Example**: A resource that provides access to file contents:
+
+```python
+@mcp.resource("files://{file_path}")
+def read_file(file_path: str) -> str:
+    """Read the contents of a file at the specified path."""
+    with open(file_path, 'r') as f:
+        return f.read()
+```
+
+### Prompts (User-controlled)
+
+Prompts are predefined templates or workflows that guide the interaction between the user, the AI model, and the Server's capabilities.
+
+- **Control**: Prompts are **user-controlled**, often presented as options in the Host application's UI.
+- **Nature**: They structure interactions for optimal use of available Tools and Resources.
+- **Selection**: Users typically select a prompt before the AI model begins processing, setting context for the interaction.
+- **Use Cases**: Common workflows, specialized task templates, guided interactions.
+
+**Example**: A prompt template for generating a code review:
+
+```python
+@mcp.prompt()
+def code_review(code: str, language: str) -> list:
+    """Generate a code review for the provided code snippet."""
+    return [
+        {
+            "role": "system",
+            "content": f"You are a code reviewer examining {language} code. Provide a detailed review highlighting best practices, potential issues, and suggestions for improvement."
+        },
+        {
+            "role": "user",
+            "content": f"Please review this {language} code:\n\n```{language}\n{code}\n```"
+        }
+    ]
+```
+
+### Sampling (Server-initiated)
+
+Sampling allows Servers to request the Client (specifically, the Host application) to perform LLM interactions.
+
+- **Control**: Sampling is **server-initiated** but requires Client/Host facilitation.
+- **Nature**: It enables server-driven agentic behaviors and potentially recursive or multi-step interactions.
+- **Safety**: Like Tools, sampling operations typically require user approval.
+- **Use Cases**: Complex multi-step tasks, autonomous agent workflows, interactive processes.
+
+**Example**: A Server might request the Client to analyze data it has processed:
+
+```python
+# Server initiates a sampling request
+client.request_sampling({
+    "instructions": "Analyze this data and identify the key trends",
+    "data": processed_data
+})
+```
+
+## Capabilities Comparison Table
+
+| Capability | Controlled By | Direction | Side Effects | Approval Needed | Typical Use Cases |
+|------------|---------------|-----------|--------------|-----------------|-------------------|
+| Tools      | Model (LLM)   | Client → Server | Yes (potentially) | Yes | Actions, API calls, data manipulation |
+| Resources  | Application   | Client → Server | No (read-only) | Typically no | Data retrieval, context gathering |
+| Prompts    | User          | Server → Client | No | No (selected by user) | Guided workflows, specialized templates |
+| Sampling   | Server        | Server → Client → Server | Indirectly | Yes | Multi-step tasks, agentic behaviors |
+
+## How Capabilities Work Together
+
+These capabilities are designed to work together in complementary ways:
+
+1. A user might select a **Prompt** to start a specialized workflow
+2. The Prompt might include context from **Resources**
+3. During processing, the AI model might call **Tools** to perform specific actions
+4. For complex operations, the Server might use **Sampling** to request additional LLM processing
+
+The distinction between these primitives provides a clear structure for MCP interactions, enabling AI models to access information, perform actions, and engage in complex workflows while maintaining appropriate control boundaries.
+
+## Discovery Process
+
+One of MCP's key features is dynamic capability discovery. When a Client connects to a Server, it can query the available Tools, Resources, and Prompts through specific list methods:
+
+- `tools/list`: Discover available Tools
+- `resources/list`: Discover available Resources
+- `prompts/list`: Discover available Prompts
+
+This dynamic discovery mechanism allows Clients to adapt to the specific capabilities each Server offers without requiring hardcoded knowledge of the Server's functionality.
+
+## Conclusion
+
+Understanding these core primitives is essential for working with MCP effectively. By providing distinct types of capabilities with clear control boundaries, MCP enables powerful interactions between AI models and external systems while maintaining appropriate safety and control mechanisms.
+
+In the next section, we'll explore how Gradio integrates with MCP to provide easy-to-use interfaces for these capabilities. 
