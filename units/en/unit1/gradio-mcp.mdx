@@ -1,6 +1,12 @@
 # Gradio MCP Integration
 
-Gradio is a popular Python library for quickly creating customizable web interfaces for machine learning models. In this section, we'll explore how Gradio integrates with the Model Context Protocol (MCP) to provide an accessible way to create and expose MCP capabilities.
+We've now explored the core concepts of the MCP protocol and how to implement an MCP Servers and Clients. In this section, we're going to make things slightly easier by using Gradio to create an MCP Server!
+
+<Tip>
+
+Gradio is a popular Python library for quickly creating customizable web interfaces for machine learning models. 
+
+</Tip>
 
 ## Introduction to Gradio
 
@@ -11,6 +17,8 @@ Gradio allows developers to create UIs for their models with just a few lines of
 - Testing and debugging model behavior
 
 With the addition of MCP support, Gradio now offers a straightforward way to expose AI model capabilities through the standardized MCP protocol.
+
+Combining Gradio with MCP allows you to create both human-friendly interfaces and AI-accessible tools with minimal code. But best of all, Gradio is already well-used by the AI community, so you can use it to share your MCP Servers with others.
 
 ## Prerequisites
 
@@ -68,6 +76,10 @@ The MCP server will be accessible at:
 ```
 http://your-server:port/gradio_api/mcp/sse
 ```
+
+The application itself will still be accessible and it looks like this:
+
+![Gradio MCP Server](https://huggingface.co/mcp-course/images/resolve/main/unit1/7.png)
 
 ## How It Works Behind the Scenes
 

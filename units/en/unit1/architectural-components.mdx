@@ -1,28 +1,31 @@
 # Architectural Components of MCP
 
-The Model Context Protocol (MCP) is built on a client-server architecture that enables structured communication between AI models and external systems. In this section, we'll explore the core architectural components that make up the MCP ecosystem.
+In the previous section, we discussed the key concepts and terminology of MCP. Now, let's dive deeper into the architectural components that make up the MCP ecosystem.
 
 ## Host, Client, and Server
 
+The Model Context Protocol (MCP) is built on a client-server architecture that enables structured communication between AI models and external systems. 
+
 ![MCP Architecture](https://huggingface.co/mcp-course/images/resolve/main/unit1/4.png)
 
-The MCP architecture consists of three primary components, each with well-defined roles and responsibilities: Host, Client, and Server. We touched on the Host and Client in the previous section, but let's dive deeper into each component and their responsibilities.
+The MCP architecture consists of three primary components, each with well-defined roles and responsibilities: Host, Client, and Server. We touched on these in the previous section, but let's dive deeper into each component and their responsibilities.
 
 ### Host
 
-The **Host** is the user-facing AI application that end-users interact with directly. Examples include:
+The **Host** is the user-facing AI application that end-users interact with directly. 
 
+Examples include:
 - Anthropic's Claude Desktop
 - AI-enhanced IDEs like Cursor, or integrations to tools like Continue.dev
 - Custom AI agents and applications built in libraries like LangChain or smolagents
 
 The Host's responsibilities include:
 - Managing user interactions and permissions
-- Initiating connections to MCP Servers via Clients
+- Initiating connections to MCP Servers via MCP Clients
 - Orchestrating the overall flow between user requests, LLM processing, and external tools
 - Rendering results back to users in a coherent format
 
-In most cases, users will select their host application based on their needs and preferences. For example, a developer may choose Cursor for its powerful code editing capabilities, while domain experts may use custom applications built in tools like LangChain or smolagents.
+In most cases, users will select their host application based on their needs and preferences. For example, a developer may choose Cursor for its powerful code editing capabilities, while domain experts may use custom applications built in smolagents.
 
 ### Client
 
@@ -31,8 +34,6 @@ The **Client** is a component within the Host application that manages communica
 - Each Client maintains a 1:1 connection with a single Server
 - Handles the protocol-level details of MCP communication
 - Acts as the intermediary between the Host's logic and the external Server
-
-
 
 ### Server
 
@@ -47,21 +48,27 @@ The **Server** is an external program or service that exposes capabilities to AI
 
 Let's examine how these components interact in a typical MCP workflow:
 
-1. **User Interaction**: The user interacts with the Host application, expressing an intent or query.
+<Tip>
 
-2. **Host Processing**: The Host processes the user's input, potentially using an LLM to understand the request and determine which external capabilities might be needed.
+In the next section, we'll dive deeper into the communication protocol that enables these components with practical examples.
 
-3. **Client Connection**: The Host directs its Client component to connect to the appropriate Server(s).
+</Tip>
 
-4. **Capability Discovery**: The Client queries the Server to discover what capabilities (Tools, Resources, Prompts) it offers.
+1. **User Interaction**: The user interacts with the **Host** application, expressing an intent or query.
 
-5. **Capability Invocation**: Based on the user's needs or the LLM's determination, the Host instructs the Client to invoke specific capabilities from the Server.
+2. **Host Processing**: The **Host** processes the user's input, potentially using an LLM to understand the request and determine which external capabilities might be needed.
 
-6. **Server Execution**: The Server executes the requested functionality and returns results to the Client.
+3. **Client Connection**: The **Host** directs its **Client** component to connect to the appropriate Server(s).
 
-7. **Result Integration**: The Client relays these results back to the Host, which incorporates them into the context for the LLM or presents them directly to the user.
+4. **Capability Discovery**: The **Client** queries the **Server** to discover what capabilities (Tools, Resources, Prompts) it offers.
 
-A key advantage of this architecture is its modularity. A single Host can connect to multiple Servers simultaneously via different Clients. New Servers can be added to the ecosystem without requiring changes to existing Hosts. Capabilities can be easily composed across different Servers.
+5. **Capability Invocation**: Based on the user's needs or the LLM's determination, the Host instructs the **Client** to invoke specific capabilities from the **Server**.
+
+6. **Server Execution**: The **Server** executes the requested functionality and returns results to the **Client**.
+
+7. **Result Integration**: The **Client** relays these results back to the **Host**, which incorporates them into the context for the LLM or presents them directly to the user.
+
+A key advantage of this architecture is its modularity. A single **Host** can connect to multiple **Servers** simultaneously via different **Clients**. New **Servers** can be added to the ecosystem without requiring changes to existing **Hosts**. Capabilities can be easily composed across different **Servers**.
 
 <Tip>
 
@@ -70,5 +77,9 @@ As we discussed in the previous section, this modularity transforms the traditio
 </Tip>
 
 The architecture might appear simple, but its power lies in the standardization of the communication protocol and the clear separation of responsibilities between components. This design allows for a cohesive ecosystem where AI models can seamlessly connect with an ever-growing array of external tools and data sources.
+
+## Conclusion
+
+These interaction patterns are guided by several key principles that shape the design and evolution of MCP. The protocol emphasizes **standardization** by providing a universal protocol for AI connectivity, while maintaining **simplicity** by keeping the core protocol straightforward yet enabling advanced features. **Safety** is prioritized by requiring explicit user approval for sensitive operations, and discoverability enables dynamic discovery of capabilities. The protocol is built with **extensibility** in mind, supporting evolution through versioning and capability negotiation, and ensures **interoperability** across different implementations and environments.
 
 In the next section, we'll explore the communication protocol that enables these components to work together effectively.
