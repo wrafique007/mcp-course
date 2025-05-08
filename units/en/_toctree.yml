@@ -15,10 +15,12 @@
     title: The Communication Protocol
   - local: unit1/capabilities
     title: Understanding MCP Capabilities
+  - local: unit1/sdk
+    title: MCP SDK
+  - local: unit1/mcp-clients
+    title: MCP Clients
   - local: unit1/gradio-mcp
     title: Gradio MCP Integration
-  - local: unit1/configuration
-    title: Configuring your MCP Host
 
 - title: "2. Use Case: End-to-End MCP Application"
   sections:
