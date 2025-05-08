@@ -2,397 +2,73 @@
 
 In this section, we'll create clients that can interact with our MCP server using different programming languages. We'll implement both a JavaScript client using HuggingFace.js and a Python client using smolagents.
 
-## Setting Up the Project
+## Configuring MCP Clients
 
-<hfoptions id="setup">
-<hfoption id="javascript">
+Effective deployment of MCP servers and clients requires proper configuration. The MCP specification is still evolving, so the configuration methods are subject to evolution. We'll focus on the current best practices for configuration.
 
-First, let's create a new directory for our JavaScript client and initialize a Node.js project:
+### MCP Configuration Files
 
-```bash
-mkdir mcp-sentiment-client
-cd mcp-sentiment-client
-npm init -y
-npm install @huggingface/inference @modelcontextprotocol/sdk
-```
+MCP hosts like Claude Desktop and Cursor IDE use configuration files to manage server connections. These files define which servers are available and how to connect to them.
 
-</hfoption>
-<hfoption id="python">
+The configuration files are very simple, easy to understand, and consistent across major MCP hosts.
 
-First, let's create a new directory for our Python client and set up the environment:
+#### `mcp.json` Structure
 
-```bash
-mkdir mcp-sentiment-python-client
-cd mcp-sentiment-python-client
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install smolagents
-```
+The standard configuration file for MCP is named `mcp.json`. Here's the basic structure:
 
-</hfoption>
-</hfoptions>
-
-## Creating the Client
-
-<hfoptions id="client-implementation">
-<hfoption id="javascript">
-
-Create a new file called `client.js` with the following code:
-
-```javascript
-import { HfInference } from '@huggingface/inference';
-import { Client } from '@modelcontextprotocol/sdk';
-
-class McpClient {
-    constructor({ provider, model, apiKey }) {
-        this.client = new HfInference(apiKey);
-        this.provider = provider;
-        this.model = model;
-        this.clients = new Map();
-        this.availableTools = [];
+```json
+{
+  "servers": [
+    {
+      "name": "MCP Server",
+      "transport": {
+        "type": "sse",
+        "url": "http://localhost:7860/gradio_api/mcp/sse"
+      }
     }
-
-    async addMcpServer(server) {
-        const transport = new StdioClientTransport({
-            ...server,
-            env: { ...server.env, PATH: process.env.PATH ?? "" },
-        });
-        const mcp = new Client({ name: "@huggingface/mcp-client", version: "1.0.0" });
-        await mcp.connect(transport);
-
-        const toolsResult = await mcp.listTools();
-        console.log("Connected to server with tools:", toolsResult.tools.map(({ name }) => name));
-
-        for (const tool of toolsResult.tools) {
-            this.clients.set(tool.name, mcp);
-        }
-
-        this.availableTools.push(
-            ...toolsResult.tools.map((tool) => ({
-                type: "function",
-                function: {
-                    name: tool.name,
-                    description: tool.description,
-                    parameters: tool.inputSchema,
-                },
-            }))
-        );
-    }
-
-    async processMessage(message) {
-        const response = await this.client.chatCompletion({
-            model: this.model,
-            messages: [{ role: "user", content: message }],
-            tools: this.availableTools,
-        });
-
-        const toolCall = response.choices[0].message.tool_calls?.[0];
-        if (toolCall) {
-            const toolName = toolCall.function.name;
-            const toolArgs = JSON.parse(toolCall.function.arguments);
-
-            const client = this.clients.get(toolName);
-            if (client) {
-                const result = await client.callTool({ 
-                    name: toolName, 
-                    arguments: toolArgs 
-                });
-                return result.content[0].text;
-            }
-        }
-
-        return response.choices[0].message.content;
-    }
-}
-
-// Example usage
-async function main() {
-    const client = new McpClient({
-        provider: "cerebras",
-        model: "meta-llama/Llama-3.3-70B-Instruct",
-        apiKey: process.env.HF_TOKEN,
-    });
-
-    // Connect to our sentiment analysis server
-    await client.addMcpServer({
-        command: "npx",
-        args: ["mcp-remote", "http://localhost:7860/gradio_api/mcp/sse"],
-    });
-
-    // Test the client
-    const result = await client.processMessage(
-        "Analyze the sentiment of this text: 'I love using MCP, it's amazing!'"
-    );
-    console.log("Result:", result);
-}
-
-main().catch(console.error);
-```
-
-</hfoption>
-<hfoption id="python">
-
-Create a new file called `client.py` with the following code:
-
-```python
-from smolagents import Agent, MCPClient
-from smolagents.tools import Tool
-import os
-
-class SentimentAnalysisClient:
-    def __init__(self, api_key):
-        self.agent = Agent(
-            model="meta-llama/Llama-3.3-70B-Instruct",
-            api_key=api_key
-        )
-        self.mcp_client = MCPClient()
-        
-    async def connect_to_server(self, server_url):
-        """Connect to the MCP server and register its tools."""
-        await self.mcp_client.connect(server_url)
-        tools = await self.mcp_client.list_tools()
-        
-        # Register each tool with the agent
-        for tool in tools:
-            self.agent.add_tool(Tool(
-                name=tool.name,
-                description=tool.description,
-                parameters=tool.input_schema,
-                function=self.mcp_client.call_tool
-            ))
-    
-    async def analyze_sentiment(self, text):
-        """Analyze the sentiment of the given text using the MCP server."""
-        response = await self.agent.run(
-            f"Analyze the sentiment of this text: '{text}'"
-        )
-        return response
-
-async def main():
-    # Initialize the client
-    client = SentimentAnalysisClient(api_key=os.getenv("HF_TOKEN"))
-    
-    # Connect to the local server
-    await client.connect_to_server("http://localhost:7860/gradio_api/mcp/sse")
-    
-    # Test the client
-    result = await client.analyze_sentiment("I love using MCP, it's amazing!")
-    print("Result:", result)
-
-if __name__ == "__main__":
-    import asyncio
-    asyncio.run(main())
-```
-
-</hfoption>
-</hfoptions>
-
-## Understanding the Code
-
-<hfoptions id="code-explanation">
-<hfoption id="javascript">
-
-Let's break down the key components of the JavaScript client:
-
-1. **McpClient Class**:
-   - Manages connections to MCP servers
-   - Handles tool discovery and registration
-   - Processes messages using the HuggingFace inference API
-
-2. **Server Connection**:
-   - Uses the MCP SDK to connect to servers
-   - Automatically discovers and registers available tools
-   - Maintains a map of tool names to client connections
-
-3. **Message Processing**:
-   - Sends messages to the LLM with available tools
-   - Handles tool calls and their responses
-   - Returns either tool results or direct LLM responses
-
-</hfoption>
-<hfoption id="python">
-
-Let's break down the key components of the Python client:
-
-1. **SentimentAnalysisClient Class**:
-   - Manages the smolagents Agent and MCP client
-   - Handles server connections and tool registration
-   - Provides a simple interface for sentiment analysis
-
-2. **Server Connection**:
-   - Uses smolagents' MCPClient to connect to the server
-   - Automatically discovers and registers available tools
-   - Maps MCP tools to smolagents Tool objects
-
-3. **Sentiment Analysis**:
-   - Uses the agent to process requests
-   - Leverages the registered MCP tools
-   - Returns the analysis results
-
-</hfoption>
-</hfoptions>
-
-## Running the Client
-
-<hfoptions id="running">
-<hfoption id="javascript">
-
-To run the JavaScript client, you'll need to:
-
-1. Set your HuggingFace API token:
-```bash
-export HF_TOKEN=your_token_here
-```
-
-2. Run the client:
-```bash
-node client.js
-```
-
-</hfoption>
-<hfoption id="python">
-
-To run the Python client, you'll need to:
-
-1. Set your HuggingFace API token:
-```bash
-export HF_TOKEN=your_token_here
-```
-
-2. Run the client:
-```bash
-python client.py
-```
-
-</hfoption>
-</hfoptions>
-
-## Testing with the Deployed Server
-
-<hfoptions id="deployment">
-<hfoption id="javascript">
-
-To test with your deployed server, modify the server URL in the `main()` function:
-
-```javascript
-await client.addMcpServer({
-    command: "npx",
-    args: ["mcp-remote", "https://YOUR_USERNAME-mcp-sentiment.hf.space/gradio_api/mcp/sse"],
-});
-```
-
-</hfoption>
-<hfoption id="python">
-
-To test with your deployed server, modify the server URL in the `main()` function:
-
-```python
-await client.connect_to_server("https://YOUR_USERNAME-mcp-sentiment.hf.space/gradio_api/mcp/sse")
-```
-
-</hfoption>
-</hfoptions>
-
-## Advanced Features
-
-<hfoptions id="advanced-features">
-<hfoption id="javascript">
-
-The JavaScript client can be enhanced with several features:
-
-1. **Error Handling**:
-```javascript
-async processMessage(message) {
-    try {
-        const response = await this.client.chatCompletion({
-            // ... existing code ...
-        });
-        // ... rest of the code ...
-    } catch (error) {
-        console.error("Error processing message:", error);
-        throw error;
-    }
+  ]
 }
 ```
 
-2. **Retry Logic**:
-```javascript
-async addMcpServer(server, maxRetries = 3) {
-    for (let i = 0; i < maxRetries; i++) {
-        try {
-            // ... existing connection code ...
-            return;
-        } catch (error) {
-            if (i === maxRetries - 1) throw error;
-            await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
-        }
+In this example, we have a single server configured to use SSE transport, connecting to a local Gradio server running on port 7860.
+
+#### Configuration for HTTP+SSE Transport
+
+For remote servers using HTTP+SSE transport, the configuration includes the server URL:
+
+```json
+{
+  "servers": [
+    {
+      "name": "Remote MCP Server",
+      "transport": {
+        "type": "sse",
+        "url": "https://example.com/gradio_api/mcp/sse"
+      }
     }
+  ]
 }
 ```
 
-3. **Tool Validation**:
-```javascript
-validateTool(tool) {
-    if (!tool.name || !tool.description || !tool.inputSchema) {
-        throw new Error(`Invalid tool schema: ${JSON.stringify(tool)}`);
+This configuration allows your UI client to communicate with the Gradio MCP server using the MCP protocol, enabling seamless integration between your frontend and the MCP service.
+
+## Configuring a UI MCP Client
+
+When working with Gradio MCP servers, you can configure your UI client to connect to the server using the MCP protocol. Here's how to set it up:
+
+### Basic Configuration
+
+Create a new file called `config.json` with the following configuration:
+
+```json
+{
+  "mcpServers": {
+    "mcp": {
+      "url": "http://localhost:7860/gradio_api/mcp/sse"
     }
+  }
 }
 ```
 
-</hfoption>
-<hfoption id="python">
+This configuration allows your UI client to communicate with the Gradio MCP server using the MCP protocol, enabling seamless integration between your frontend and the MCP service.
 
-The Python client can be enhanced with several SmolAgents features:
-
-1. **Tool Caching**:
-```python
-from smolagents.tools import ToolCache
-
-class SentimentAnalysisClient:
-    def __init__(self, api_key):
-        self.tool_cache = ToolCache()
-        # ... rest of initialization ...
-
-    async def connect_to_server(self, server_url):
-        tools = await self.mcp_client.list_tools()
-        for tool in tools:
-            self.tool_cache.add_tool(tool)
-```
-
-2. **Error Handling and Retries**:
-```python
-from tenacity import retry, stop_after_attempt, wait_exponential
-
-class SentimentAnalysisClient:
-    @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10))
-    async def analyze_sentiment(self, text):
-        try:
-            response = await self.agent.run(
-                f"Analyze the sentiment of this text: '{text}'"
-            )
-            return response
-        except Exception as e:
-            print(f"Error analyzing sentiment: {e}")
-            raise
-```
-
-3. **Batch Processing**:
-```python
-async def analyze_multiple_texts(self, texts):
-    """Analyze sentiment for multiple texts in parallel."""
-    tasks = [self.analyze_sentiment(text) for text in texts]
-    return await asyncio.gather(*tasks)
-```
-
-</hfoption>
-</hfoptions>
-
-## Next Steps
-
-Now that we have both JavaScript and Python clients working with our MCP server, we can:
-
-1. Compare the implementations and their trade-offs
-2. Explore more advanced features of each client
-3. Consider how to scale the system for production use
-
-In the next section, we'll look at how to test and deploy the complete system. 
