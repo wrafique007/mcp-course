@@ -114,54 +114,6 @@ When you set `mcp_server=True` in `launch()`, several things happen:
 
 4. **Hosted MCP Servers on 🤗 Spaces**: You can publish your Gradio application for free on Hugging Face Spaces, which will allow you to have a free hosted MCP server. Here's an example of such a Space: https://huggingface.co/spaces/abidlabs/mcp-tools
 
-## Hands-on Exercise: Creating a Sentiment Analysis MCP Server
-
-Let's create a more practical example - a sentiment analysis MCP Server:
-
-```python
-import gradio as gr
-from textblob import TextBlob
-
-def sentiment_analysis(text: str) -> dict:
-    """
-    Analyze the sentiment of the given text.
-
-    Args:
-        text (str): The text to analyze
-
-    Returns:
-        dict: A dictionary containing polarity, subjectivity, and assessment
-    """
-    blob = TextBlob(text)
-    sentiment = blob.sentiment
-    
-    return {
-        "polarity": round(sentiment.polarity, 2),  # -1 (negative) to 1 (positive)
-        "subjectivity": round(sentiment.subjectivity, 2),  # 0 (objective) to 1 (subjective)
-        "assessment": "positive" if sentiment.polarity > 0 else "negative" if sentiment.polarity < 0 else "neutral"
-    }
-
-# Create the Gradio interface
-demo = gr.Interface(
-    fn=sentiment_analysis,
-    inputs=gr.Textbox(placeholder="Enter text to analyze..."),
-    outputs=gr.JSON(),
-    title="Text Sentiment Analysis",
-    description="Analyze the sentiment of text using TextBlob"
-)
-
-# Launch the interface and MCP server
-if __name__ == "__main__":
-    demo.launch(mcp_server=True)
-```
-
-To use this MCP Server with an MCP client like Claude Desktop:
-
-1. Save this code as `sentiment_server.py`
-2. Install the required packages: `pip install "gradio[mcp]" textblob`
-3. Run the server: `python sentiment_server.py`
-4. Configure your MCP client to connect to the server at `http://localhost:7860/gradio_api/mcp/sse`
-
 ## Troubleshooting Tips
 
 1. **Type Hints and Docstrings**: Ensure you provide type hints and valid docstrings for your functions. The docstring should include an "Args:" block with indented parameter names.
