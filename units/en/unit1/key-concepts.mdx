@@ -17,7 +17,7 @@ The **M×N Integration Problem** refers to the challenge of connecting M differe
 
 Without a protocol like MCP, developers would need to create M×N custom integrations—one for each possible pairing of an AI application with an external capability. 
 
-![Without MCP](https://huggingface.co/mcp-course/images/resolve/main/unit1/1.png)
+![Without MCP](https://huggingface.co/datasets/mcp-course/images/resolve/main/unit1/1.png)
 
 Each AI application would need to integrate with each tool/data source individually. This is a very complex and expensive process which introduces a lot of friction for developers, and high maintenance costs.
 
@@ -25,7 +25,7 @@ Each AI application would need to integrate with each tool/data source individua
 
 MCP transforms this into an M+N problem by providing a standard interface: each AI application implements the client side of MCP once, and each tool/data source implements the server side once. This dramatically reduces integration complexity and maintenance burden.
 
-![With MCP](https://huggingface.co/mcp-course/images/resolve/main/unit1/2.png)
+![With MCP](https://huggingface.co/datasets/mcp-course/images/resolve/main/unit1/2.png)
 
 Each AI application implements the client side of MCP once, and each tool/data source implements the server side once.
 
@@ -45,7 +45,7 @@ When documenting our applications and communincating with the community, we shou
 
 Just like client server relationships in HTTP, MCP has a client and a server.
 
-![MCP Components](https://huggingface.co/mcp-course/images/resolve/main/unit1/3.png)
+![MCP Components](https://huggingface.co/datasets/mcp-course/images/resolve/main/unit1/3.png)
 
 - **Host**: The user-facing AI application that end-users interact with directly. Examples include Anthropic's Claude Desktop, AI-enhanced IDEs like Cursor, inference libraries like Hugging Face Python SDK, or custom applications built in libraries like LangChain or smolagents. Hosts initiate connections to MCP Servers and orchestrate the overall flow between user requests, LLM processing, and external tools.
 
