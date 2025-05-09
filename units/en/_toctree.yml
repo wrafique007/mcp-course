@@ -29,7 +29,7 @@
   - local: unit2/gradio-server
     title: Building the Gradio MCP Server
   - local: unit2/clients
-    title: Building MCP Clients
+    title: Using MCP Clients with your application
   - local: unit2/gradio-client
     title: Building an MCP Client with Gradio
 
