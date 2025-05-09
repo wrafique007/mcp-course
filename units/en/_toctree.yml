@@ -30,6 +30,8 @@
     title: Building the Gradio MCP Server
   - local: unit2/clients
     title: Building MCP Clients
+  - local: unit2/gradio-client
+    title: Building an MCP Client with Gradio
 
 - title: "3. Use Case: Advanced MCP Development"
   sections:
