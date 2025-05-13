@@ -70,6 +70,19 @@ Of course, your application's value is the sum of the capabilities it offers. So
 | **Prompts** | Pre-defined templates or workflows that guide interactions between users, AI models, and the available capabilities. | A summarization prompt. |
 | **Sampling** | Server-initiated requests for the Client/Host to perform LLM interactions, enabling recursive actions where the LLM can review generated content and make further decisions. | A writing application reviewing its own output and decide to refine it further. |
 
+In the following diagram, we can see the collective capabilities applied to a use case for a code agent.
+
+![collective diagram](https://huggingface.co/datasets/mcp-course/images/resolve/main/unit1/8.png)
+
+This application might use their MCP entities in the following way:
+
+| Entity | Name | Description |
+| --- | --- | --- |
+| Tool | Code Interpreter | A tool that can execute code that the LLM writes. |
+| Resource | Documentation | A resource that contains the documentation of the application. |
+| Prompt | Code Style | A prompt that guides the LLM to generate code. |
+| Sampling | Code Review | A sampling that allows the LLM to review the code and make further decisions. |
+
 ### Conclusion
 
 Understanding these key concepts and terminology provides the foundation for working with MCP effectively. In the following sections, we'll build on this foundation to explore the architectural components, communication protocol, and capabilities that make up the Model Context Protocol. 
