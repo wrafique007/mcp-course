@@ -236,6 +236,18 @@ with ToolCollection.from_mcp(
 
 ```
 
+<details>
+<summary>
+Output
+</summary>
+
+```sh
+Weather API: Get the weather in a specific location
+
+```
+
+</details>
+
 We can also connect to an MCP server that is hosted on a remote machine. In this case, we need to pass the `SSEServerParameters` to the `ToolCollection.from_mcp` method. 
 
 ```python
@@ -247,6 +259,20 @@ with MCPClient(
     # Tools from the remote server are available
     print("\n".join(f"{t.name}: {t.description}" for t in tools))
 ```
+
+<details>
+<summary>
+Output
+</summary>
+
+```sh
+prime_factors: Compute the prime factorization of a positive integer.
+generate_cheetah_image: Generate a cheetah image.
+image_orientation: Returns whether image is portrait or landscape.
+sepia: Apply a sepia filter to the input image.
+```
+
+</details>
 
 Now, let's see how we can use the MCP Client in a code agent. 
 
@@ -267,6 +293,17 @@ with ToolCollection.from_mcp(
 
 ```
 
+<details>
+<summary>
+Output
+</summary>
+
+```sh
+The weather in Tokyo is sunny with a temperature of 20 degrees Celsius.
+```
+
+</details>
+
 We can also connect to an MCP packages. Here's an example of connecting to the `pubmedmcp` package.
 
 ```python
@@ -281,8 +318,19 @@ server_parameters = StdioServerParameters(
 
 with ToolCollection.from_mcp(server_parameters, trust_remote_code=True) as tool_collection:
     agent = CodeAgent(tools=[*tool_collection.tools], add_base_tools=True)
-    agent.run("Please find a remedy for hangover.")u
+    agent.run("Please find a remedy for hangover.")
 ```
+
+<details>
+<summary>
+Output
+</summary>
+
+```sh
+The remedy for hangover is to drink water.
+```
+
+</details>
 
 ## Next Steps
 
