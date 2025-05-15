@@ -12,7 +12,8 @@ jobs:
     with:
       commit_sha: ${{ github.sha }}
       package: mcp-course
-      path_to_docs: units
+      package_name: mcp-course
+      path_to_docs: units/
       build_command: doc-builder build mcp-course units --build_dir build/mcp-course
       deploy_to_hub: true
       languages: en 
