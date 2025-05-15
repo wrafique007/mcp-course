@@ -1,0 +1,342 @@
+# MCP Clients
+
+Now that we have a basic understanding of the Model Context Protocol, we can explore the essential role of MCP Clients in the Model Context Protocol ecosystem.
+
+ In this part of Unit 1, we'll explore the essential role of MCP Clients in the Model Context Protocol ecosystem.
+
+In this section, you will:
+
+* Understand what MCP Clients are and their role in the MCP architecture
+* Learn about the key responsibilities of MCP Clients
+* Explore the major MCP Client implementations
+* Discover how to use Hugging Face's MCP Client implementation
+* See practical examples of MCP Client usage
+
+## Understanding MCP Clients
+
+MCP Clients are crucial components that act as the bridge between AI applications (Hosts) and external capabilities provided by MCP Servers. Think of the Host as your main application (like an AI assistant or IDE) and the Client as a specialized module within that Host responsible for handling MCP communications.
+
+## User Interface Client
+
+Let's start by exploring the user interface clients that are available for the MCP.
+
+### Chat Interface Clients
+
+Anthropic's Claude Desktop stands as one of the most prominent MCP Clients, providing integration with various MCP Servers.
+
+### Interactive Development Clients
+
+Cursor's MCP Client implementation enables AI-powered coding assistance through direct integration with code editing capabilities. It supports multiple MCP Server connections and provides real-time tool invocation during coding, making it a powerful tool for developers.
+
+Continue.dev is another example of an interactive development client that supports MCP and connects to an MCP server from VS Code.
+
+## Configuring MCP Clients
+
+Now that we've covered the core of the MCP protocol, let's look at how to configure your MCP servers and clients.
+
+Effective deployment of MCP servers and clients requires proper configuration. 
+
+<Tip>
+
+The MCP specification is still evolving, so the configuration methods are subject to evolution. We'll focus on the current best practices for configuration.
+
+</Tip>
+
+### MCP Configuration Files
+
+MCP hosts use configuration files to manage server connections. These files define which servers are available and how to connect to them.
+
+Fortunately, the configuration files are very simple, easy to understand, and consistent across major MCP hosts.
+
+#### `mcp.json` Structure
+
+The standard configuration file for MCP is named `mcp.json`. Here's the basic structure:
+
+```json
+{
+  "servers": [
+    {
+      "name": "Server Name",
+      "transport": {
+        "type": "stdio|sse",
+        // Transport-specific configuration
+      }
+    }
+  ]
+}
+```
+
+In this example, we have a single server with a name and a transport type. The transport type is either `stdio` or `sse`.
+
+#### Configuration for stdio Transport
+
+For local servers using stdio transport, the configuration includes the command and arguments to launch the server process:
+
+```json
+{
+  "servers": [
+    {
+      "name": "File Explorer",
+      "transport": {
+        "type": "stdio",
+        "command": "python",
+        "args": ["/path/to/file_explorer_server.py"]
+      }
+    }
+  ]
+}
+```
+
+Here, we have a server called "File Explorer" that is a local script.
+
+#### Configuration for HTTP+SSE Transport
+
+For remote servers using HTTP+SSE transport, the configuration includes the server URL:
+
+```json
+{
+  "servers": [
+    {
+      "name": "Remote API Server",
+      "transport": {
+        "type": "sse",
+        "url": "https://example.com/mcp-server"
+      }
+    }
+  ]
+}
+```
+
+#### Environment Variables in Configuration
+
+Environment variables can be passed to server processes using the `env` field. Here's how to access them in your server code:
+
+<hfoptions id="env-variables">
+<hfoption id="python">
+
+In Python, we use the `os` module to access environment variables:
+
+```python
+import os
+
+# Access environment variables
+github_token = os.environ.get("GITHUB_TOKEN")
+if not github_token:
+    raise ValueError("GITHUB_TOKEN environment variable is required")
+
+# Use the token in your server code
+def make_github_request():
+    headers = {"Authorization": f"Bearer {github_token}"}
+    # ... rest of your code
+```
+
+</hfoption>
+<hfoption id="javascript">
+
+In JavaScript, we use the `process.env` object to access environment variables:
+
+```javascript
+// Access environment variables
+const githubToken = process.env.GITHUB_TOKEN;
+if (!githubToken) {
+    throw new Error("GITHUB_TOKEN environment variable is required");
+}
+
+// Use the token in your server code
+function makeGithubRequest() {
+    const headers = { "Authorization": `Bearer ${githubToken}` };
+    // ... rest of your code
+}
+```
+
+</hfoption>
+</hfoptions>
+
+The corresponding configuration in `mcp.json` would look like this:
+
+```json
+{
+  "servers": [
+    {
+      "name": "GitHub API",
+      "transport": {
+        "type": "stdio",
+        "command": "python",
+        "args": ["/path/to/github_server.py"],
+        "env": {
+          "GITHUB_TOKEN": "your_github_token"
+        }
+      }
+    }
+  ]
+}
+```
+
+### Configuration Examples
+
+Let's look at some real-world configuration scenarios:
+
+#### Scenario 1: Local Server Configuration
+
+In this scenario, we have a local server that is a Python script which could be a file explorer or a code editor.
+
+```json
+{
+  "servers": [
+    {
+      "name": "File Explorer",
+      "transport": {
+        "type": "stdio",
+        "command": "python",
+        "args": ["/path/to/file_explorer_server.py"]
+      }
+    }
+  ]
+}
+```
+
+#### Scenario 2: Remote Server Configuration
+
+In this scenario, we have a remote server that is a weather API.
+
+```json
+{
+  "servers": [
+    {
+      "name": "Weather API",
+      "transport": {
+        "type": "sse",
+        "url": "https://example.com/mcp-server"
+      }
+    }
+  ]
+}
+```
+
+Proper configuration is essential for successfully deploying MCP integrations. By understanding these aspects, you can create robust and reliable connections between AI applications and external capabilities.
+
+In the next section, we'll explore the ecosystem of MCP servers available on Hugging Face Hub and how to publish your own servers there. 
+
+## Code Clients
+
+You can also use the MCP Client in within code so that the tools are available to the LLM. Let's explore some examples in `smolagents`.
+
+First, let's explore our weather server from the previous page. In `smolagents`, we can use the `ToolCollection` class to automatically discover and register tools from an MCP server. This is done by passing the `StdioServerParameters` or `SSEServerParameters` to the `ToolCollection.from_mcp` method. We can then print the tools to the console.
+
+```python
+from smolagents import ToolCollection, CodeAgent
+from mcp.client.stdio import StdioServerParameters
+
+server_parameters = StdioServerParameters(command="uv", args=["run", "server.py"])
+
+with ToolCollection.from_mcp(
+    server_parameters, trust_remote_code=True
+) as tools:
+    print("\n".join(f"{t.name}: {t.description}" for t in tools))
+
+```
+
+<details>
+<summary>
+Output
+</summary>
+
+```sh
+Weather API: Get the weather in a specific location
+
+```
+
+</details>
+
+We can also connect to an MCP server that is hosted on a remote machine. In this case, we need to pass the `SSEServerParameters` to the `ToolCollection.from_mcp` method. 
+
+```python
+from smolagents.mcp_client import MCPClient
+
+with MCPClient(
+    {"url": "https://abidlabs-mcp-tools.hf.space/gradio_api/mcp/sse"}
+) as tools:
+    # Tools from the remote server are available
+    print("\n".join(f"{t.name}: {t.description}" for t in tools))
+```
+
+<details>
+<summary>
+Output
+</summary>
+
+```sh
+prime_factors: Compute the prime factorization of a positive integer.
+generate_cheetah_image: Generate a cheetah image.
+image_orientation: Returns whether image is portrait or landscape.
+sepia: Apply a sepia filter to the input image.
+```
+
+</details>
+
+Now, let's see how we can use the MCP Client in a code agent. 
+
+```python
+from smolagents import ToolCollection, CodeAgent
+from mcp.client.stdio import StdioServerParameters
+from smolagents import CodeAgent, InferenceClientModel
+
+model = InferenceClientModel()
+
+server_parameters = StdioServerParameters(command="uv", args=["run", "server.py"])
+
+with ToolCollection.from_mcp(
+    server_parameters, trust_remote_code=True
+) as tool_collection:
+    agent = CodeAgent(tools=[*tool_collection.tools], model=model)
+    agent.run("What's the weather in Tokyo?")
+
+```
+
+<details>
+<summary>
+Output
+</summary>
+
+```sh
+The weather in Tokyo is sunny with a temperature of 20 degrees Celsius.
+```
+
+</details>
+
+We can also connect to an MCP packages. Here's an example of connecting to the `pubmedmcp` package.
+
+```python
+from smolagents import ToolCollection, CodeAgent
+from mcp import StdioServerParameters
+
+server_parameters = StdioServerParameters(
+    command="uv",
+    args=["--quiet", "pubmedmcp@0.1.3"],
+    env={"UV_PYTHON": "3.12", **os.environ},
+)
+
+with ToolCollection.from_mcp(server_parameters, trust_remote_code=True) as tool_collection:
+    agent = CodeAgent(tools=[*tool_collection.tools], add_base_tools=True)
+    agent.run("Please find a remedy for hangover.")
+```
+
+<details>
+<summary>
+Output
+</summary>
+
+```sh
+The remedy for hangover is to drink water.
+```
+
+</details>
+
+## Next Steps
+
+Now that you understand MCP Clients, you're ready to:
+* Explore specific MCP Server implementations
+* Learn about creating custom MCP Clients
+* Dive into advanced MCP integration patterns
+
+Let's continue our journey into the world of Model Context Protocol!
