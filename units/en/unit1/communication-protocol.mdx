@@ -129,73 +129,27 @@ In the previous section, we discussed the lifecycle of a single interaction betw
 
 The MCP protocol defines a structured interaction lifecycle between Clients and Servers:
 
-<style>
-    .diagram {
-        margin: 20px 0;
-        font-family: monospace;
-    }
-    .client {
-      background-color: lightgreen;
-    }
-    .server {
-      background-color: lightblue;
-    }
-    .client, .server {
-        display: inline-block;
-        width: 50px;
-        text-align: center;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        margin: 0px;
-    }
-    .arrow {
-        display: inline-block;
-        width: 100px;
-        text-align: center;
-        color: #666;
-        position: relative;
-    }
-    .arrow::before {
-        content: "→";
-        position: absolute;
-        bottom: -15px;
-        left: 50%;
-        transform: translateX(-50%);
-    }
-    .arrow.reverse::before {
-        content: "←";
-    }
-    .message {
-        display: block;
-        margin: 5px 0 20px 0;
-        color: #333;
-    }
-</style>
-
 ### Initialization
 
 The Client connects to the Server and they exchange protocol versions and capabilities, and the Server responds with its supported protocol version and capabilities.
 
-<div class="diagram">
-    <div class="client">💻</div>
-    <div class="arrow">
-        <span class="message">initialize</span>
-    </div>
-    <div class="server">🌐</div>
-    <br>
-    <div class="client">💻</div>
-    <div class="arrow reverse">
-        <span class="message">response</span>
-    </div>
-    <div class="server">🌐</div>
-    <br>
-    <div class="client">💻</div>
-    <div class="arrow">
-        <span class="message">initialized</span>
-    </div>
-    <div class="server">🌐</div>
-</div>
+<table style="width: 100%;">
+  <tr>
+    <td style="background-color: lightgreen; text-align: center; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">💻</td>
+    <td style="text-align: center;">→<br>initialize</td>
+    <td style="background-color: lightblue; text-align: center; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">🌐</td>
+  </tr>
+  <tr>
+    <td style="background-color: lightgreen; text-align: center; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">💻</td>
+    <td style="text-align: center;">←<br>response</td>
+    <td style="background-color: lightblue; text-align: center; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">🌐</td>
+  </tr>
+  <tr>
+    <td style="background-color: lightgreen; text-align: center; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">💻</td>
+    <td style="text-align: center;">→<br>initialized</td>
+    <td style="background-color: lightblue; text-align: center; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">🌐</td>
+  </tr>
+</table>
 
 The Client confirms the initialization is complete via a notification message.
 
@@ -203,19 +157,18 @@ The Client confirms the initialization is complete via a notification message.
 
 The Client requests information about available capabilities and the Server responds with a list of available tools.
 
-<div class="diagram">
-    <div class="client">💻</div>
-    <div class="arrow">
-        <span class="message">tools/list</span>
-    </div>
-    <div class="server">🌐</div>
-    <br>
-    <div class="client">💻</div>
-    <div class="arrow reverse">
-        <span class="message">response</span>
-    </div>
-    <div class="server">🌐</div>
-</div>
+<table style="width: 100%;">
+  <tr>
+    <td style="background-color: lightgreen; text-align: center; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">💻</td>
+    <td style="text-align: center;">→<br>tools/list</td>
+    <td style="background-color: lightblue; text-align: center; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">🌐</td>
+  </tr>
+  <tr>
+    <td style="background-color: lightgreen; text-align: center; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">💻</td>
+    <td style="text-align: center;">←<br>response</td>
+    <td style="background-color: lightblue; text-align: center; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">🌐</td>
+  </tr>
+</table>
 
 This process could be repeated for each tool, resource, or prompt type.
 
@@ -223,49 +176,45 @@ This process could be repeated for each tool, resource, or prompt type.
 
 The Client invokes capabilities based on the Host's needs.
 
-<div class="diagram">
-    <div class="client">💻</div>
-    <div class="arrow">
-        <span class="message">tools/call</span>
-    </div>
-    <div class="server">🌐</div>
-    <br>
-    <div class="client">💻</div>
-    <div class="arrow reverse">
-        <span class="message">notification (optional progress)</span>
-    </div>
-    <div class="server">🌐</div>
-    <br>
-    <div class="client">💻</div>
-    <div class="arrow reverse">
-        <span class="message">response</span>
-    </div>
-    <div class="server">🌐</div>
-</div>
+<table style="width: 100%;">
+  <tr>
+    <td style="background-color: lightgreen; text-align: center; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">💻</td>
+    <td style="text-align: center;">→<br>tools/call</td>
+    <td style="background-color: lightblue; text-align: center; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">🌐</td>
+  </tr>
+  <tr>
+    <td style="background-color: lightgreen; text-align: center; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">💻</td>
+    <td style="text-align: center;">←<br>notification (optional progress)</td>
+    <td style="background-color: lightblue; text-align: center; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">🌐</td>
+  </tr>
+  <tr>
+    <td style="background-color: lightgreen; text-align: center; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">💻</td>
+    <td style="text-align: center;">←<br>response</td>
+    <td style="background-color: lightblue; text-align: center; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">🌐</td>
+  </tr>
+</table>
 
 ### Termination
 
 The connection is gracefully closed when no longer needed and the Server acknowledges the shutdown request.
 
-<div class="diagram">
-    <div class="client">💻</div>
-    <div class="arrow">
-        <span class="message">shutdown</span>
-    </div>
-    <div class="server">🌐</div>
-    <br>
-    <div class="client">💻</div>
-    <div class="arrow reverse">
-        <span class="message">response</span>
-    </div>
-    <div class="server">🌐</div>
-    <br>
-    <div class="client">💻</div>
-    <div class="arrow">
-        <span class="message">exit</span>
-    </div>
-    <div class="server">🌐</div>
-</div>
+<table style="width: 100%;">
+  <tr>
+    <td style="background-color: lightgreen; text-align: center; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">💻</td>
+    <td style="text-align: center;">→<br>shutdown</td>
+    <td style="background-color: lightblue; text-align: center; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">🌐</td>
+  </tr>
+  <tr>
+    <td style="background-color: lightgreen; text-align: center; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">💻</td>
+    <td style="text-align: center;">←<br>response</td>
+    <td style="background-color: lightblue; text-align: center; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">🌐</td>
+  </tr>
+  <tr>
+    <td style="background-color: lightgreen; text-align: center; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">💻</td>
+    <td style="text-align: center;">→<br>exit</td>
+    <td style="background-color: lightblue; text-align: center; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">🌐</td>
+  </tr>
+</table>
 
 The Client sends the final exit message to complete the termination.
 
