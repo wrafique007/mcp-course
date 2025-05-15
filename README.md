@@ -1,6 +1,10 @@
 # The Model Context Protocol (MCP) Course
 
+![1](https://github.com/user-attachments/assets/d26dcc5e-46cb-449e-aecb-49ece10d342a)
+
 If you like the course, **don't hesitate to ⭐ star this repository**. This helps us to **make the course more visible 🤗**.
+
+<img src="https://huggingface.co/datasets/agents-course/course-images/resolve/main/en/communication/please_star.gif" alt="Star the repo" />
 
 ## Content
 
@@ -14,9 +18,7 @@ You can access the course here 👉 [Coming Soon]
 | ------- | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
 | 0       | Welcome to the Course                               | Welcome, guidelines, necessary tools, and course overview.                                              |
 | 1       | Introduction to Model Context Protocol              | Definition of MCP, key concepts, and its role in connecting AI models with external data and tools.     |
-| 2       | Understanding MCP Architecture and Core Concepts    | Explore the MCP architecture, communication protocols, and core primitives.                             |
-| 3       | Building with MCP: Practical Development            | Learn to implement MCP clients and servers using available SDKs and frameworks.                         |
-| 4       | Advanced Topics, Security, and the Future of MCP    | Explore advanced features, security considerations, and the future roadmap of MCP.                      |
+| 2       | Building with MCP: Practical Development            | Learn to implement MCP clients and servers using available SDKs and frameworks.                         |
 
 ## Prerequisites
 
