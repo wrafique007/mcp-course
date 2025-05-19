@@ -15,7 +15,7 @@ We'll connect to the MCP server we created in the previous section and use it to
 First, we need to install the `smolagents`, gradio and mcp-client libraries, if we haven't already:
 
 ```bash
-pip install smolagents[mcp] gradio[mcp] mcp
+pip install "smolagents[mcp]" "gradio[mcp]" mcp
 ```
 
 Now, we can import the necessary libraries and create a simple Gradio interface that uses the MCP Client to connect to the MCP Server.
