@@ -21,6 +21,10 @@ Without a protocol like MCP, developers would need to create M×N custom integra
 
 Each AI application would need to integrate with each tool/data source individually. This is a very complex and expensive process which introduces a lot of friction for developers, and high maintenance costs.
 
+Once we have multiple models and multiple tools, the number of integrations becomes too large to manage, each with its own unique interface.
+
+![Multiple Models and Tools](https://huggingface.co/datasets/mcp-course/images/resolve/main/unit1/1a.png)
+
 ### With MCP (M+N Solution)
 
 MCP transforms this into an M+N problem by providing a standard interface: each AI application implements the client side of MCP once, and each tool/data source implements the server side once. This dramatically reduces integration complexity and maintenance burden.
