@@ -104,7 +104,7 @@ try:
 
     demo.launch()
 finally:
-    mcp_client.close()
+    mcp_client.disconnect()
 ```
 
 You'll notice that we're closing the MCP Client in the `finally` block. This is important because the MCP Client is a long-lived object that needs to be closed when the program exits.
