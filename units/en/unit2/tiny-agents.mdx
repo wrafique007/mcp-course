@@ -102,7 +102,7 @@ We connect to our Gradio based MCP server via the [`mcp-remote`](https://www.npm
 
 What makes connecting Gradio MCP servers to our Tiny Agent possible is that recent LLMs (both closed and open) have been trained for function calling, aka. tool use. This same capability powers our integration with the sentiment analysis tool we built with Gradio.
 
-A tool is defined by its name, a description, and a JSONSchema representation of its parameters - exactly how we defined our sentiment analysis function in the Gradio server. Let's look at a simple example:
+A tool is defined by its name, a description, and a JSON Schema representation of its parameters - exactly how we defined our sentiment analysis function in the Gradio server. Let's look at a simple example:
 
 ```ts
 const weatherTool = {
