@@ -277,9 +277,8 @@ sepia: Apply a sepia filter to the input image.
 Now, let's see how we can use the MCP Client in a code agent. 
 
 ```python
-from smolagents import ToolCollection, CodeAgent
+from smolagents import InferenceClientModel, CodeAgent, ToolCollection
 from mcp.client.stdio import StdioServerParameters
-from smolagents import CodeAgent, InferenceClientModel
 
 model = InferenceClientModel()
 
