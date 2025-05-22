@@ -224,7 +224,7 @@ You can also use the MCP Client in within code so that the tools are available t
 First, let's explore our weather server from the previous page. In `smolagents`, we can use the `ToolCollection` class to automatically discover and register tools from an MCP server. This is done by passing the `StdioServerParameters` or `SSEServerParameters` to the `ToolCollection.from_mcp` method. We can then print the tools to the console.
 
 ```python
-from smolagents import ToolCollection, CodeAgent
+from smolagents import ToolCollection
 from mcp.client.stdio import StdioServerParameters
 
 server_parameters = StdioServerParameters(command="uv", args=["run", "server.py"])
@@ -242,7 +242,7 @@ Output
 </summary>
 
 ```sh
-Weather API: Get the weather in a specific location
+get_weather: Get the current weather for a specified location.
 
 ```
 
@@ -306,6 +306,7 @@ The weather in Tokyo is sunny with a temperature of 20 degrees Celsius.
 We can also connect to an MCP package. Here's an example of connecting to the `pubmedmcp` package.
 
 ```python
+import os
 from smolagents import ToolCollection, CodeAgent
 from mcp import StdioServerParameters
 
