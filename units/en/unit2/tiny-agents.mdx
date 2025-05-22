@@ -1,13 +1,235 @@
 # Tiny Agents: an MCP-powered agent in 50 lines of code
 
-Now that we've built MCP servers in Gradio, let's explore MCP clients even further. This section builds on the experimental project [Tiny Agents](https://huggingface.co/blog/tiny-agents), which demonstrates a super simple way of deploying MCP clients that can connect to services like our Gradio sentiment analysis server.
+Now that we've built MCP servers in Gradio and learned about creating MCP clients, let's complete our end-to-end application by building a TypeScript agent that can seamlessly interact with our sentiment analysis tool. This section builds on the project [Tiny Agents](https://huggingface.co/blog/tiny-agents), which demonstrates a super simple way of deploying MCP clients that can connect to services like our Gradio sentiment analysis server.
 
-In this short exercise, we will walk you through how to implement a TypeScript (JS) MCP client that can communicate with any MCP server, including the Gradio-based sentiment analysis server we built in the previous section. You'll see how MCP standardizes the way agents interact with tools, making Agentic AI development significantly simpler.
+In this final exercise of Unit 2, we will walk you through how to implement a TypeScript (JS) MCP client that can communicate with any MCP server, including the Gradio-based sentiment analysis server we built in the previous sections. This completes our end-to-end MCP application flow: from building a Gradio MCP server exposing a sentiment analysis tool, to creating a flexible agent that can use this tool alongside other capabilities.
 
 ![meme](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/blog/tiny-agents/thumbnail.jpg)
 <figcaption>Image credit https://x.com/adamdotdev</figcaption>
 
-We will show you how to connect your tiny agent to Gradio-based MCP servers, allowing it to leverage both your custom sentiment analysis tool and other pre-built tools.
+## Installation
+
+First, we need to install the `tiny-agents` package.
+
+```bash
+npm install @huggingface/tiny-agents
+# or
+pnpm add @huggingface/tiny-agents
+```
+
+Then, we need to install the `mcp-remote` package.
+
+```bash
+npm install @mcpjs/mcp-remote
+# or
+pnpm add @mcpjs/mcp-remote
+```
+
+## Tiny Agents MCP Client in the Command Line
+
+Tiny Agents can create MCP clients from the command line based on JSON configuration files.
+
+Let's setup a project with a basic Tiny Agent.
+
+```bash
+mkdir my-agent
+touch my-agent/agent.json
+```
+
+The JSON file will look like this:
+
+```json
+{
+	"model": "Qwen/Qwen2.5-72B-Instruct",
+	"provider": "nebius",
+	"servers": [
+		{
+			"type": "stdio",
+			"config": {
+				"command": "npx",
+				"args": [
+					"mcp-remote",
+					"http://localhost:7860/gradio_api/mcp/sse"
+				]
+			}
+		}
+	]
+}
+```
+
+Here we have a basic Tiny Agent that can connect to our Gradio MCP server. It includes a model, provider, and a server configuration.
+
+| Field | Description |
+|-------|-------------|
+| `model` | The open source model to use for the agent |
+| `provider` | The inference provider to use for the agent |
+| `servers` | The servers to use for the agent. We'll use the `mcp-remote` server for our Gradio MCP server. |
+
+We could also use an open source model running locally with Tiny Agents.
+
+```json
+{
+	"model": "Qwen/Qwen3-32B",
+	"endpointUrl": "http://localhost:1234/v1",
+	"servers": [
+		{
+			"type": "stdio",
+			"config": {
+				"command": "npx",
+				"args": [
+					"mcp-remote",
+					"http://localhost:1234/v1/mcp/sse"
+				]
+			}
+		}
+	]
+}
+```
+
+Here we have a Tiny Agent that can connect to a local model. It includes a model, endpoint URL (`http://localhost:1234/v1`), and a server configuration. The endpoint should be an OpenAI-compatible endpoint.
+
+We can then run the agent with the following command:
+
+```bash
+npx @huggingface/tiny-agents run ./my-agent
+```
+
+## Custom Tiny Agents MCP Client
+
+Now that we understand both Tiny Agents and Gradio MCP servers, let's see how they work together! The beauty of MCP is that it provides a standardized way for agents to interact with any MCP-compatible server, including our Gradio-based sentiment analysis server from earlier sections.
+
+### Using the Gradio Server with Tiny Agents
+
+To connect our Tiny Agent to the Gradio sentiment analysis server we built earlier in this unit, we just need to add it to our list of servers. Here's how we can modify our agent configuration:
+
+```ts
+const agent = new Agent({
+    provider: process.env.PROVIDER ?? "nebius",
+    model: process.env.MODEL_ID ?? "Qwen/Qwen2.5-72B-Instruct",
+    apiKey: process.env.HF_TOKEN,
+    servers: [
+        // ... existing servers ...
+        {
+            command: "npx",
+            args: [
+                "mcp-remote",
+                "http://localhost:7860/gradio_api/mcp/sse"  // Your Gradio MCP server
+            ]
+        }
+    ],
+});
+```
+
+Now our agent can use the sentiment analysis tool alongside other tools! For example, it could:
+1. Read text from a file using the filesystem server
+2. Analyze its sentiment using our Gradio server
+3. Write the results back to a file
+
+### Example Interaction
+
+Here's what a conversation with our agent might look like:
+
+```
+User: Read the file "feedback.txt" from my Desktop and analyze its sentiment
+
+Agent: I'll help you analyze the sentiment of the feedback file. Let me break this down into steps:
+
+1. First, I'll read the file using the filesystem tool
+2. Then, I'll analyze its sentiment using the sentiment analysis tool
+3. Finally, I'll write the results to a new file
+
+[Agent proceeds to use the tools and provide the analysis]
+```
+
+### Deployment Considerations
+
+When deploying your Gradio MCP server to Hugging Face Spaces, you'll need to update the server URL in your agent configuration to point to your deployed space:
+
+```ts
+{
+    command: "npx",
+    args: [
+        "mcp-remote",
+        "https://YOUR_USERNAME-mcp-sentiment.hf.space/gradio_api/mcp/sse"
+    ]
+}
+```
+
+This allows your agent to use the sentiment analysis tool from anywhere, not just locally!
+
+## Conclusion: Our Complete End-to-End MCP Application
+
+In this unit, we've gone from understanding MCP basics to building a complete end-to-end application:
+
+1. We created a Gradio MCP server that exposes a sentiment analysis tool
+2. We learned how to connect to this server using MCP clients
+3. We built a tiny agent in TypeScript that can interact with our tool
+
+This demonstrates the power of the Model Context Protocol - we can create specialized tools using frameworks we're familiar with (like Gradio), expose them through a standardized interface (MCP), and then have agents seamlessly use these tools alongside other capabilities.
+
+The complete flow we've built allows an agent to:
+- Connect to multiple tool providers
+- Dynamically discover available tools
+- Use our custom sentiment analysis tool
+- Combine it with other capabilities like file system access and web browsing
+
+This modular approach is what makes MCP so powerful for building flexible AI applications.
+
+## Bonus: Build a Browser Automation MCP Server with Playwright
+
+As a bonus, let's explore how to use the Playwright MCP server for browser automation with Tiny Agents. This demonstrates the extensibility of the MCP ecosystem beyond our sentiment analysis example.
+
+<Tip>
+
+This section is based on the [Tiny Agents blog post](https://huggingface.co/blog/tiny-agents) and adapted for the MCP course. 
+
+</Tip>
+
+In this section, we'll show you how to build an agent that can perform web automation tasks like searching, clicking, and extracting information from websites.
+
+```ts
+// playwright-agent.ts
+import { Agent } from "@huggingface/tiny-agents";
+
+const agent = new Agent({
+  provider: process.env.PROVIDER ?? "nebius",
+  model: process.env.MODEL_ID ?? "Qwen/Qwen2.5-72B-Instruct",
+  apiKey: process.env.HF_TOKEN,
+  servers: [
+    {
+      command: "npx",
+      args: ["playwright-mcp"]
+    }
+  ],
+});
+
+await agent.run();
+```
+
+The Playwright MCP server exposes tools that allow your agent to:
+
+1. Open browser tabs
+2. Navigate to URLs
+3. Click on elements
+4. Type into forms
+5. Extract content from webpages
+6. Take screenshots
+
+Here's an example interaction with our browser automation agent:
+
+```
+User: Search for "tiny agents" on GitHub and collect the names of the top 3 repositories
+
+Agent: I'll search GitHub for "tiny agents" repositories.
+[Agent opens browser, navigates to GitHub, performs the search, and extracts repository names]
+
+Here are the top 3 (not real) repositories for "tiny agents":
+1. huggingface/tiny-agents
+2. modelcontextprotocol/tiny-agents-examples
+3. langchain/tiny-agents-js
+```
+
+This browser automation capability can be combined with other MCP servers to create powerful workflows—for example, extracting text from a webpage and then analyzing it with custom tools.
 
 ## How to run the complete demo
 
@@ -36,10 +258,8 @@ By default our example Agent connects to the following two MCP servers:
 - the "canonical" [file system server](https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem), which gets access to your Desktop,
 - and the [Playwright MCP](https://github.com/microsoft/playwright-mcp) server, which knows how to use a sandboxed Chromium browser for you.
 
-You can easily add your Gradio sentiment analysis server to this list, as we'll demonstrate later in this section.
-
 > [!NOTE]
-> Note: this is a bit counter-intuitive but currently, all MCP servers in tiny agents are actually local processes (though remote servers are coming soon). This doesn't includes our Gradio server running on localhost:7860.
+> Note: this is a bit counter-intuitive but currently, all MCP servers in tiny agents are actually local processes (though remote servers are coming soon). 
 
 Our input for this first video was:
 
@@ -53,16 +273,13 @@ Now let us try this prompt that involves some Web browsing:
   <source src="https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/blog/tiny-agents/brave-search.mp4" type="video/mp4">
 </video>
 
-With our Gradio sentiment analysis tool connected, we could similarly ask:
-> analyze the sentiment of this review: "I absolutely loved the product, it exceeded all my expectations!"
-
 ### Default model and provider
 
 In terms of model/provider pair, our example Agent uses by default:
 - ["Qwen/Qwen2.5-72B-Instruct"](https://huggingface.co/Qwen/Qwen2.5-72B-Instruct)
 - running on [Nebius](https://huggingface.co/docs/inference-providers/providers/nebius)
 
-This is all configurable through env variables! Here, we'll also show how to add our Gradio MCP server:
+This is all configurable through env variables:
 
 ```ts
 const agent = new Agent({
@@ -79,62 +296,13 @@ const agent = new Agent({
 			command: "npx",
 			args: ["playwright-mcp"]
 		},
-		// Our Gradio sentiment analysis server
-		{
-			command: "npx",
-			args: [
-				"mcp-remote",
-				"http://localhost:7860/gradio_api/mcp/sse"
-			]
-		}
 	],
 });
 ```
 
-<Tip>
-
-We connect to our Gradio based MCP server via the [`mcp-remote`](https://www.npmjs.com/package/mcp-remote) package.
-
-</Tip>
-
-
-## The foundation for this: tool calling native support in LLMs.
-
-What makes connecting Gradio MCP servers to our Tiny Agent possible is that recent LLMs (both closed and open) have been trained for function calling, aka. tool use. This same capability powers our integration with the sentiment analysis tool we built with Gradio.
-
-A tool is defined by its name, a description, and a JSONSchema representation of its parameters - exactly how we defined our sentiment analysis function in the Gradio server. Let's look at a simple example:
-
-```ts
-const weatherTool = {
-	type: "function",
-	function: {
-		name: "get_weather",
-		description: "Get current temperature for a given location.",
-		parameters: {
-			type: "object",
-			properties: {
-				location: {
-					type: "string",
-					description: "City and country e.g. Bogotá, Colombia",
-				},
-			},
-		},
-	},
-};
-```
-
-Our Gradio sentiment analysis tool would have a similar structure, with `text` as the input parameter instead of `location`.
-
-The canonical documentation I will link to here is [OpenAI's function calling doc](https://platform.openai.com/docs/guides/function-calling?api-mode=chat). (Yes... OpenAI pretty much defines the LLM standards for the whole community 😅).
-
-Inference engines let you pass a list of tools when calling the LLM, and the LLM is free to call zero, one or more of those tools.
-As a developer, you run the tools and feed their result back into the LLM to continue the generation.
-
-> Note that in the backend (at the inference engine level), the tools are simply passed to the model in a specially-formatted `chat_template`, like any other message, and then parsed out of the response (using model-specific special tokens) to expose them as tool calls.
-
 ## Implementing an MCP client on top of InferenceClient
 
-Now that we know what a tool is in recent LLMs, let's implement the actual MCP client that will communicate with our Gradio server and other MCP servers.
+Now that we know what a tool is in recent LLMs, let's implement the actual MCP client that will communicate with MCP servers and other MCP servers.
 
 The official doc at https://modelcontextprotocol.io/quickstart/client is fairly well-written. You only have to replace any mention of the Anthropic client SDK by any other OpenAI-compatible client SDK. (There is also a [llms.txt](https://modelcontextprotocol.io/llms-full.txt) you can feed into your LLM of choice to help you code along). 
 
@@ -145,7 +313,7 @@ As a reminder, we use HF's `InferenceClient` for our inference client.
 
 Our `McpClient` class has:
 - an Inference Client (works with any Inference Provider, and `huggingface/inference` supports both remote and local endpoints)
-- a set of MCP client sessions, one for each connected MCP server (this allows us to connect to multiple servers, including our Gradio server)
+- a set of MCP client sessions, one for each connected MCP server (this allows us to connect to multiple servers)
 - and a list of available tools that is going to be filled from the connected servers and just slightly re-formatted.
 
 ```ts
@@ -166,7 +334,7 @@ export class McpClient {
 }
 ```
 
-To connect to a MCP server (like our Gradio sentiment analysis server), the official `@modelcontextprotocol/sdk/client` TypeScript SDK provides a `Client` class with a `listTools()` method:
+To connect to a MCP server, the official `@modelcontextprotocol/sdk/client` TypeScript SDK provides a `Client` class with a `listTools()` method:
 
 ```ts
 async addMcpServer(server: StdioServerParameters): Promise<void> {
@@ -202,9 +370,7 @@ async addMcpServer(server: StdioServerParameters): Promise<void> {
 }
 ```
 
-`StdioServerParameters` is an interface from the MCP SDK that will let you easily spawn a local process: as we mentioned earlier, currently, all MCP servers are actually local processes, including our Gradio server (though we access it via HTTP).
-
-For each MCP server we connect to (including our Gradio sentiment analysis server), we slightly re-format its list of tools and add them to `this.availableTools`.
+`StdioServerParameters` is an interface from the MCP SDK that will let you easily spawn a local process: as we mentioned earlier, currently, all MCP servers are actually local processes.
 
 ### How to use the tools
 
@@ -245,20 +411,20 @@ if (client) {
 }
 ```
 
-If the LLM chooses to use our sentiment analysis tool, this code will automatically route the call to our Gradio server, execute the analysis, and return the result back to the LLM.
+If the LLM chooses to use a tool, this code will automatically route the call to the MCP server, execute the analysis, and return the result back to the LLM.
 
 Finally you will add the resulting tool message to your `messages` array and back into the LLM.
 
 ## Our 50-lines-of-code Agent 🤯
 
-Now that we have an MCP client capable of connecting to arbitrary MCP servers (including our Gradio sentiment analysis server) to get lists of tools and capable of injecting them and parsing them from the LLM inference, well... what is an Agent?
+Now that we have an MCP client capable of connecting to arbitrary MCP servers  to get lists of tools and capable of injecting them and parsing them from the LLM inference, well... what is an Agent?
 
 > Once you have an inference client with a set of tools, then an Agent is just a while loop on top of it.
 
 In more detail, an Agent is simply a combination of:
 - a system prompt
 - an LLM Inference client
-- an MCP client to hook a set of Tools into it from a bunch of MCP servers (including our Gradio server)
+- an MCP client to hook a set of Tools into it from a bunch of MCP servers 
 - some basic control flow (see below for the while loop)
 
 > [!TIP]
@@ -302,7 +468,7 @@ Even though this comes from OpenAI 😈, this sentence in particular applies to 
 
 > We encourage developers to exclusively use the tools field to pass tools, rather than manually injecting tool descriptions into your prompt and writing a separate parser for tool calls, as some have reported doing in the past.
 
-Which is to say, we don't need to provide painstakingly formatted lists of tool use examples in the prompt. The `tools: this.availableTools` param is enough, and the LLM will know how to use both the filesystem tools and our Gradio sentiment analysis tool.
+Which is to say, we don't need to provide painstakingly formatted lists of tool use examples in the prompt. The `tools: this.availableTools` param is enough, and the LLM will know how to use both the filesystem tools.
 
 Loading the tools on the Agent is literally just connecting to the MCP servers we want (in parallel because it's so easy to do in JS):
 
@@ -388,69 +554,4 @@ while (true) {
 	}
 }
 ```
-
-## Connecting Tiny Agents with Gradio MCP Servers
-
-Now that we understand both Tiny Agents and Gradio MCP servers, let's see how they work together! The beauty of MCP is that it provides a standardized way for agents to interact with any MCP-compatible server, including our Gradio-based sentiment analysis server.
-
-### Using the Gradio Server with Tiny Agents
-
-To connect our Tiny Agent to the Gradio sentiment analysis server we built earlier, we just need to add it to our list of servers. Here's how we can modify our agent configuration:
-
-```ts
-const agent = new Agent({
-    provider: process.env.PROVIDER ?? "nebius",
-    model: process.env.MODEL_ID ?? "Qwen/Qwen2.5-72B-Instruct",
-    apiKey: process.env.HF_TOKEN,
-    servers: [
-        // ... existing servers ...
-        {
-            command: "npx",
-            args: [
-                "mcp-remote",
-                "http://localhost:7860/gradio_api/mcp/sse"  // Your Gradio MCP server
-            ]
-        }
-    ],
-});
-```
-
-Now our agent can use the sentiment analysis tool alongside other tools! For example, it could:
-1. Read text from a file using the filesystem server
-2. Analyze its sentiment using our Gradio server
-3. Write the results back to a file
-
-### Example Interaction
-
-Here's what a conversation with our agent might look like:
-
-```
-User: Read the file "feedback.txt" from my Desktop and analyze its sentiment
-
-Agent: I'll help you analyze the sentiment of the feedback file. Let me break this down into steps:
-
-1. First, I'll read the file using the filesystem tool
-2. Then, I'll analyze its sentiment using the sentiment analysis tool
-3. Finally, I'll write the results to a new file
-
-[Agent proceeds to use the tools and provide the analysis]
-```
-
-### Deployment Considerations
-
-When deploying your Gradio MCP server to Hugging Face Spaces, you'll need to update the server URL in your agent configuration to point to your deployed space:
-
-```ts
-{
-    command: "npx",
-    args: [
-        "mcp-remote",
-        "https://YOUR_USERNAME-mcp-sentiment.hf.space/gradio_api/mcp/sse"
-    ]
-}
-```
-
-This allows your agent to use the sentiment analysis tool from anywhere, not just locally!
-
-
 
