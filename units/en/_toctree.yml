@@ -25,6 +25,8 @@
     title: MCP Clients
   - local: unit1/gradio-mcp
     title: Gradio MCP Integration
+  - local: unit1/certificate
+    title: Get your certificate!
 
 - title: "2. Use Case: End-to-End MCP Application"
   sections:
