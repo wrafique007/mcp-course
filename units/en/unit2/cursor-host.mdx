@@ -1,0 +1,56 @@
+# Cursor AI Integration
+
+<CourseFloatingBanner chapter={2} classNames="absolute z-10 right-0 top-0" />
+
+The most seamless way to use our MCP sentiment analysis is directly within **Cursor AI** using the built-in MCP support. This integration allows you to perform sentiment analysis directly in your coding workflow without leaving your editor.
+
+## Prerequisites
+
+Before setting up the Cursor AI integration, ensure you have:
+- Cursor AI editor installed
+- Node.js and npm installed on your system
+- Access to the sentiment analysis MCP server
+
+## Configuration
+
+Instead of manually editing JSON files, you can configure the MCP server directly through Cursor's settings interface:
+
+### Step 1: Open MCP Settings
+
+Use the keyboard shortcut `Ctrl + Shift + J` (or `Cmd + Shift + J` on Mac) to open Cursor settings, then navigate to the **MCP** tab from the left sidebar.
+
+### Step 2: Add New MCP Server
+
+1. Click **"Add new global MCP server"** to open the configuration panel
+2. Fill in the server configuration with the following details:
+
+```json
+{
+  "mcpServers": {
+    "sentiment-analysis": {
+      "command": "cmd",
+      "args": [
+      "/c",
+      "npx",
+      "-y",
+      "mcp-remote",
+      "https://YOURUSENAME-mcp-sentiment.hf.space/gradio_api/mcp/sse",
+      "--transport",
+      "sse-only"
+      ]
+    }
+  }
+}
+'''
+
+## Usage Examples
+
+Once configured, you can directly interact with Cursor AI's Agent for sentiment analysis:
+
+Ask Cursor AI to analyze text sentiment:
+- "Analyze the sentiment of this text: 'I love this product!'"
+- "What's the sentiment of: 'This is terrible'"
+- "Check sentiment: 'It's okay, nothing special'"
+
+
+
