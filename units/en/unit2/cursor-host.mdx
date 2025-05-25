@@ -24,19 +24,38 @@ Use the keyboard shortcut `Ctrl + Shift + J` (or `Cmd + Shift + J` on Mac) to op
 1. Click **"Add new global MCP server"** to open the configuration panel
 2. Fill in the server configuration with the following details:
 
+*MAC*
+```json
+{
+  "mcpServers": {
+    "sentiment-analysis": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://YOURUSENAME-mcp-sentiment.hf.space/gradio_api/mcp/sse",
+        "--transport",
+        "sse-only"
+      ]
+    }
+  }
+}
+```
+
+*Windows*
 ```json
 {
   "mcpServers": {
     "sentiment-analysis": {
       "command": "cmd",
       "args": [
-      "/c",
-      "npx",
-      "-y",
-      "mcp-remote",
-      "https://YOURUSENAME-mcp-sentiment.hf.space/gradio_api/mcp/sse",
-      "--transport",
-      "sse-only"
+        "/c",
+        "npx",
+        "-y",
+        "mcp-remote",
+        "https://YOURUSENAME-mcp-sentiment.hf.space/gradio_api/mcp/sse",
+        "--transport",
+        "sse-only"
       ]
     }
   }
