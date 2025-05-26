@@ -1,13 +1,16 @@
 # Tiny Agents: an MCP-powered agent in 50 lines of code
 
-Now that we've built MCP servers in Gradio and learned about creating MCP clients, let's complete our end-to-end application by building a TypeScript agent that can seamlessly interact with our sentiment analysis tool. This section builds on the project [Tiny Agents](https://huggingface.co/blog/tiny-agents), which demonstrates a super simple way of deploying MCP clients that can connect to services like our Gradio sentiment analysis server.
+Now that we've built MCP servers in Gradio and learned about creating MCP clients, let's complete our end-to-end application by building an agent that can seamlessly interact with our sentiment analysis tool. This section builds on the project [Tiny Agents](https://huggingface.co/blog/tiny-agents), which demonstrates a super simple way of deploying MCP clients that can connect to services like our Gradio sentiment analysis server.
 
-In this final exercise of Unit 2, we will walk you through how to implement a TypeScript (JS) MCP client that can communicate with any MCP server, including the Gradio-based sentiment analysis server we built in the previous sections. This completes our end-to-end MCP application flow: from building a Gradio MCP server exposing a sentiment analysis tool, to creating a flexible agent that can use this tool alongside other capabilities.
+In this final exercise of Unit 2, we will walk you through how to implement both TypeScript (JS) and Python MCP clients that can communicate with any MCP server, including the Gradio-based sentiment analysis server we built in the previous sections. This completes our end-to-end MCP application flow: from building a Gradio MCP server exposing a sentiment analysis tool, to creating a flexible agent that can use this tool alongside other capabilities.
 
 ![meme](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/blog/tiny-agents/thumbnail.jpg)
 <figcaption>Image credit https://x.com/adamdotdev</figcaption>
 
 ## Installation
+
+<hfoptions id="installation">
+<hfoption id="typescript">
 
 First, we need to install the `tiny-agents` package.
 
@@ -25,9 +28,30 @@ npm install @mcpjs/mcp-remote
 pnpm add @mcpjs/mcp-remote
 ```
 
+</hfoption>
+<hfoption id="python">
+
+First, you need to install the latest version of `huggingface_hub` with the `mcp` extra to get all the necessary components.
+
+```bash
+pip install "huggingface_hub[mcp]>=0.32.0"
+```
+
+Then, we need to install the `mcp-remote` package.
+
+```bash
+pip install mcp-remote
+```
+
+</hfoption>
+</hfoptions>
+
 ## Tiny Agents MCP Client in the Command Line
 
 Tiny Agents can create MCP clients from the command line based on JSON configuration files.
+
+<hfoptions id="command-line">
+<hfoption id="typescript">
 
 Let's setup a project with a basic Tiny Agent.
 
@@ -57,6 +81,53 @@ The JSON file will look like this:
 }
 ```
 
+We can then run the agent with the following command:
+
+```bash
+npx @huggingface/tiny-agents run ./my-agent
+```
+
+</hfoption>
+<hfoption id="python">
+
+Let's setup a project with a basic Tiny Agent.
+
+```bash
+mkdir my-agent
+touch my-agent/agent.json
+```
+
+The JSON file will look like this:
+
+```json
+{
+	"model": "Qwen/Qwen2.5-72B-Instruct",
+	"provider": "nebius",
+	"servers": [
+		{
+			"type": "stdio",
+			"config": {
+				"command": "python",
+				"args": [
+					"-m", 
+					"mcp_remote", 
+					"http://localhost:7860/gradio_api/mcp/sse"
+				]
+			}
+		}
+	]
+}
+```
+
+We can then run the agent with the following command:
+
+```bash
+tiny-agents run ./my-agent
+```
+
+</hfoption>
+</hfoptions>
+
 Here we have a basic Tiny Agent that can connect to our Gradio MCP server. It includes a model, provider, and a server configuration.
 
 | Field | Description |
@@ -66,6 +137,9 @@ Here we have a basic Tiny Agent that can connect to our Gradio MCP server. It in
 | `servers` | The servers to use for the agent. We'll use the `mcp-remote` server for our Gradio MCP server. |
 
 We could also use an open source model running locally with Tiny Agents.
+
+<hfoptions id="local-model">
+<hfoption id="typescript">
 
 ```json
 {
@@ -86,13 +160,33 @@ We could also use an open source model running locally with Tiny Agents.
 }
 ```
 
-Here we have a Tiny Agent that can connect to a local model. It includes a model, endpoint URL (`http://localhost:1234/v1`), and a server configuration. The endpoint should be an OpenAI-compatible endpoint.
+</hfoption>
+<hfoption id="python">
 
-We can then run the agent with the following command:
-
-```bash
-npx @huggingface/tiny-agents run ./my-agent
+```json
+{
+	"model": "Qwen/Qwen3-32B",
+	"endpoint_url": "http://localhost:1234/v1",
+	"servers": [
+		{
+			"type": "stdio",
+			"config": {
+				"command": "python",
+				"args": [
+					"-m",
+					"mcp_remote",
+					"http://localhost:1234/v1/mcp/sse"
+				]
+			}
+		}
+	]
+}
 ```
+
+</hfoption>
+</hfoptions>
+
+Here we have a Tiny Agent that can connect to a local model. It includes a model, endpoint URL (`http://localhost:1234/v1`), and a server configuration. The endpoint should be an OpenAI-compatible endpoint.
 
 ## Custom Tiny Agents MCP Client
 
@@ -101,6 +195,9 @@ Now that we understand both Tiny Agents and Gradio MCP servers, let's see how th
 ### Using the Gradio Server with Tiny Agents
 
 To connect our Tiny Agent to the Gradio sentiment analysis server we built earlier in this unit, we just need to add it to our list of servers. Here's how we can modify our agent configuration:
+
+<hfoptions id="gradio-server">
+<hfoption id="typescript">
 
 ```ts
 const agent = new Agent({
@@ -120,32 +217,44 @@ const agent = new Agent({
 });
 ```
 
+</hfoption>
+<hfoption id="python">
+
+```python
+import os
+
+from huggingface_hub import Agent
+
+agent = Agent(
+    model="Qwen/Qwen2.5-72B-Instruct",
+    provider="nebius",
+    servers=[
+        {
+            "command": "python",
+            "args": [
+                "-m",
+                "mcp_remote",
+                "http://localhost:7860/gradio_api/mcp/sse"  # Your Gradio MCP server
+            ]
+        }
+    ],
+)
+```
+
+</hfoption>
+</hfoptions>
+
 Now our agent can use the sentiment analysis tool alongside other tools! For example, it could:
 1. Read text from a file using the filesystem server
 2. Analyze its sentiment using our Gradio server
 3. Write the results back to a file
 
-### Example Interaction
-
-Here's what a conversation with our agent might look like:
-
-```
-User: Read the file "feedback.txt" from my Desktop and analyze its sentiment
-
-Agent: I'll help you analyze the sentiment of the feedback file. Let me break this down into steps:
-
-1. First, I'll read the file using the filesystem tool
-2. Then, I'll analyze its sentiment using the sentiment analysis tool
-3. Finally, I'll write the results to a new file
-
-[Agent proceeds to use the tools and provide the analysis]
-```
-
 ### Deployment Considerations
 
 When deploying your Gradio MCP server to Hugging Face Spaces, you'll need to update the server URL in your agent configuration to point to your deployed space:
 
-```ts
+
+```json
 {
     command: "npx",
     args: [
@@ -155,6 +264,7 @@ When deploying your Gradio MCP server to Hugging Face Spaces, you'll need to upd
 }
 ```
 
+
 This allows your agent to use the sentiment analysis tool from anywhere, not just locally!
 
 ## Conclusion: Our Complete End-to-End MCP Application
@@ -163,7 +273,7 @@ In this unit, we've gone from understanding MCP basics to building a complete en
 
 1. We created a Gradio MCP server that exposes a sentiment analysis tool
 2. We learned how to connect to this server using MCP clients
-3. We built a tiny agent in TypeScript that can interact with our tool
+3. We built a tiny agent in TypeScript and Python that can interact with our tool
 
 This demonstrates the power of the Model Context Protocol - we can create specialized tools using frameworks we're familiar with (like Gradio), expose them through a standardized interface (MCP), and then have agents seamlessly use these tools alongside other capabilities.
 
@@ -187,6 +297,9 @@ This section is based on the [Tiny Agents blog post](https://huggingface.co/blog
 
 In this section, we'll show you how to build an agent that can perform web automation tasks like searching, clicking, and extracting information from websites.
 
+<hfoptions id="playwright">
+<hfoption id="typescript">
+
 ```ts
 // playwright-agent.ts
 import { Agent } from "@huggingface/tiny-agents";
@@ -205,6 +318,32 @@ const agent = new Agent({
 
 await agent.run();
 ```
+
+</hfoption>
+<hfoption id="python">
+
+```python
+# playwright_agent.py
+import os
+from huggingface_hub import Agent
+
+agent = Agent(
+    provider=os.environ.get("PROVIDER", "nebius"),
+    model=os.environ.get("MODEL_ID", "Qwen/Qwen2.5-72B-Instruct"),
+    api_key=os.environ.get("HF_TOKEN"),
+    servers=[
+        {
+            "command": "npx",
+            "args": ["playwright-mcp"]
+        }
+    ],
+)
+
+agent.run()
+```
+
+</hfoption>
+</hfoptions>
 
 The Playwright MCP server exposes tools that allow your agent to:
 
@@ -233,6 +372,9 @@ This browser automation capability can be combined with other MCP servers to cre
 
 ## How to run the complete demo
 
+<hfoptions id="run-demo">
+<hfoption id="typescript">
+
 If you have NodeJS (with `pnpm` or `npm`), just run this in a terminal:
 
 ```bash
@@ -246,6 +388,21 @@ pnpx @huggingface/mcp-client
 ```
 
 This installs the package into a temporary folder then executes its command.
+
+</hfoption>
+<hfoption id="python">
+
+If you have Python installed, you can run this in a terminal:
+
+```bash
+pip install "huggingface_hub[mcp]>=0.32.0"
+tiny-agents run
+```
+
+This installs the package and runs the tiny agents client.
+
+</hfoption>
+</hfoptions>
 
 You'll see your simple Agent connect to multiple MCP servers (running locally), loading their tools (similar to how it would load your Gradio sentiment analysis tool), then prompting you for a conversation.
 
@@ -281,6 +438,9 @@ In terms of model/provider pair, our example Agent uses by default:
 
 This is all configurable through env variables:
 
+<hfoptions id="default-model">
+<hfoption id="typescript">
+
 ```ts
 const agent = new Agent({
 	provider: process.env.PROVIDER ?? "nebius",
@@ -300,11 +460,41 @@ const agent = new Agent({
 });
 ```
 
+</hfoption>
+<hfoption id="python">
+
+```python
+import os
+
+agent = Agent(
+    provider=os.environ.get("PROVIDER", "nebius"),
+    model=os.environ.get("MODEL_ID", "Qwen/Qwen2.5-72B-Instruct"),
+    api_key=os.environ.get("HF_TOKEN"),
+    servers=[
+        # Default servers
+        {
+            "command": "npx",
+            "args": ["@modelcontextprotocol/servers", "filesystem"]
+        },
+        {
+            "command": "npx",
+            "args": ["playwright-mcp"]
+        },
+    ],
+)
+```
+
+</hfoption>
+</hfoptions>
+
 ## Implementing an MCP client on top of InferenceClient
 
 Now that we know what a tool is in recent LLMs, let's implement the actual MCP client that will communicate with MCP servers and other MCP servers.
 
 The official doc at https://modelcontextprotocol.io/quickstart/client is fairly well-written. You only have to replace any mention of the Anthropic client SDK by any other OpenAI-compatible client SDK. (There is also a [llms.txt](https://modelcontextprotocol.io/llms-full.txt) you can feed into your LLM of choice to help you code along). 
+
+<hfoptions id="mcp-client">
+<hfoption id="typescript">
 
 As a reminder, we use HF's `InferenceClient` for our inference client.
 
@@ -370,11 +560,87 @@ async addMcpServer(server: StdioServerParameters): Promise<void> {
 }
 ```
 
+</hfoption>
+<hfoption id="python">
+
+As a reminder, we use the Hugging Face `InferenceClient` for our inference client.
+
+> [!TIP]
+> The complete Python implementation is available in the [tiny-agents package](https://github.com/huggingface/tiny-agents)
+
+Our `McpClient` class has:
+- an Inference Client (works with any Inference Provider, and supports both remote and local endpoints)
+- a set of MCP client sessions, one for each connected MCP server (this allows us to connect to multiple servers)
+- and a list of available tools that is going to be filled from the connected servers and just slightly re-formatted.
+
+```python
+from huggingface_hub import InferenceClient
+from modelcontextprotocol import Client
+from modelcontextprotocol.transports import StdioClientTransport
+
+class McpClient:
+    def __init__(self, provider, model, api_key):
+        self.client = InferenceClient(api_key)
+        self.provider = provider
+        self.model = model
+        self.clients = {}
+        self.available_tools = []
+    
+    # [...]
+
+```
+
+To connect to a MCP server, the official `modelcontextprotocol` Python SDK provides a `Client` class with a `list_tools()` method:
+
+```python
+# Lines 111-219 of `MCPClient.add_mcp_server`
+# https://github.com/huggingface/huggingface_hub/blob/main/src/huggingface_hub/inference/_mcp/mcp_client.py#L111:L219
+class MCPClient:
+    ...
+    async def add_mcp_server(self, type: ServerType, **params: Any):
+        # 'type' can be "stdio", "sse", or "http"
+        # 'params' are specific to the server type, e.g.:
+        # for "stdio": {"command": "my_tool_server_cmd", "args": ["--port", "1234"]}
+        # for "http": {"url": "http://my.tool.server/mcp"}
+
+        # 1. Establish connection based on type (stdio, sse, http)
+        #    (Uses mcp.client.stdio_client, sse_client, or streamablehttp_client)
+        read, write = await self.exit_stack.enter_async_context(...)
+
+        # 2. Create an MCP ClientSession
+        session = await self.exit_stack.enter_async_context(
+            ClientSession(read_stream=read, write_stream=write, ...)
+        )
+        await session.initialize()
+
+        # 3. List tools from the server
+        response = await session.list_tools()
+        for tool in response.tools:
+            # Store session for this tool
+            self.sessions[tool.name] = session 
+            #  Add tool to the list of available tools and Format for LLM
+            self.available_tools.append({ 
+                "type": "function",
+                "function": {
+                    "name": tool.name,
+                    "description": tool.description,
+                    "parameters": tool.input_schema,
+                },
+            })
+
+```
+
+</hfoption>
+</hfoptions>
+
 `StdioServerParameters` is an interface from the MCP SDK that will let you easily spawn a local process: as we mentioned earlier, currently, all MCP servers are actually local processes.
 
 ### How to use the tools
 
 Using our sentiment analysis tool (or any other MCP tool) is straightforward. You just pass `this.availableTools` to your LLM chat-completion, in addition to your usual array of messages:
+
+<hfoptions id="use-tools">
+<hfoption id="typescript">
 
 ```ts
 const stream = this.client.chatCompletionStream({
@@ -386,9 +652,28 @@ const stream = this.client.chatCompletionStream({
 });
 ```
 
+</hfoption>
+<hfoption id="python">
+
+```python
+stream = self.client.chat_completion_stream(
+    provider=self.provider,
+    model=self.model,
+    messages=messages,
+    tools=self.available_tools,
+    tool_choice="auto"
+)
+```
+
+</hfoption>
+</hfoptions>
+
 `tool_choice: "auto"` is the parameter you pass for the LLM to generate zero, one, or multiple tool calls.
 
 When parsing or streaming the output, the LLM will generate some tool calls (i.e. a function name, and some JSON-encoded arguments), which you (as a developer) need to compute. The MCP client SDK once again makes that very easy; it has a `client.callTool()` method:
+
+<hfoptions id="tool-calls">
+<hfoption id="typescript">
 
 ```ts
 const toolName = toolCall.function.name;
@@ -411,13 +696,39 @@ if (client) {
 }
 ```
 
+</hfoption>
+<hfoption id="python">
+
+```python
+tool_name = tool_call.function.name
+tool_args = json.loads(tool_call.function.arguments)
+
+tool_message = {
+    "role": "tool",
+    "tool_call_id": tool_call.id,
+    "content": "",
+    "name": tool_name
+}
+
+# Get the appropriate session for this tool
+client = self.clients.get(tool_name)
+if client:
+    result = await client.call_tool(name=tool_name, arguments=tool_args)
+    tool_message["content"] = result.content[0].text
+else:
+    tool_message["content"] = f"Error: No session found for tool: {tool_name}"
+```
+
+</hfoption>
+</hfoptions>
+
 If the LLM chooses to use a tool, this code will automatically route the call to the MCP server, execute the analysis, and return the result back to the LLM.
 
 Finally you will add the resulting tool message to your `messages` array and back into the LLM.
 
 ## Our 50-lines-of-code Agent 🤯
 
-Now that we have an MCP client capable of connecting to arbitrary MCP servers  to get lists of tools and capable of injecting them and parsing them from the LLM inference, well... what is an Agent?
+Now that we have an MCP client capable of connecting to arbitrary MCP servers to get lists of tools and capable of injecting them and parsing them from the LLM inference, well... what is an Agent?
 
 > Once you have an inference client with a set of tools, then an Agent is just a while loop on top of it.
 
@@ -426,6 +737,9 @@ In more detail, an Agent is simply a combination of:
 - an LLM Inference client
 - an MCP client to hook a set of Tools into it from a bunch of MCP servers 
 - some basic control flow (see below for the while loop)
+
+<hfoptions id="agent-class">
+<hfoption id="typescript">
 
 > [!TIP]
 > The complete `Agent.ts` code file is [here](https://github.com/huggingface/huggingface.js/blob/main/packages/mcp-client/src/Agent.ts).
@@ -462,6 +776,43 @@ export class Agent extends McpClient {
 }
 ```
 
+</hfoption>
+<hfoption id="python">
+
+> [!TIP]
+> The complete Python implementation is available in the [tiny-agents package](https://github.com/huggingface/tiny-agents)
+
+Our Agent class simply extends McpClient:
+
+```python
+# Lines 12-54 of `Agent` 
+# https://github.com/huggingface/huggingface_hub/blob/main/src/huggingface_hub/inference/_mcp/agent.py#L12:L54
+class Agent(MCPClient):
+    def __init__(
+        self,
+        *,
+        model: str,
+        servers: Iterable[Dict], # Configuration for MCP servers
+        provider: Optional[PROVIDER_OR_POLICY_T] = None,
+        api_key: Optional[str] = None,
+        prompt: Optional[str] = None, # The system prompt
+    ):
+        # Initialize the underlying MCPClient with model, provider, etc.
+        super().__init__(model=model, provider=provider, api_key=api_key)
+        # Store server configurations to be loaded
+        self._servers_cfg = list(servers)
+        # Start the conversation with a system message
+        self.messages: List[Union[Dict, ChatCompletionInputMessage]] = [
+            {"role": "system", "content": prompt or DEFAULT_SYSTEM_PROMPT}
+        ]
+
+
+
+```
+
+</hfoption>
+</hfoptions>
+
 By default, we use a very simple system prompt inspired by the one shared in the [GPT-4.1 prompting guide](https://cookbook.openai.com/examples/gpt4-1_prompting_guide).
 
 Even though this comes from OpenAI 😈, this sentence in particular applies to more and more models, both closed and open:
@@ -472,13 +823,32 @@ Which is to say, we don't need to provide painstakingly formatted lists of tool 
 
 Loading the tools on the Agent is literally just connecting to the MCP servers we want (in parallel because it's so easy to do in JS):
 
+<hfoptions id="load-tools">
+<hfoption id="typescript">
+
 ```ts
 async loadTools(): Promise<void> {
 	await Promise.all(this.servers.map((s) => this.addMcpServer(s)));
 }
 ```
 
+</hfoption>
+<hfoption id="python">
+
+```python
+    async def load_tools(self) -> None:
+        # Connect to all configured MCP servers and register their tools
+        for cfg in self._servers_cfg:
+            await self.add_mcp_server(cfg["type"], **cfg["config"])
+```
+
+</hfoption>
+</hfoptions>
+
 We add two extra tools (outside of MCP) that can be used by the LLM for our Agent's control flow:
+
+<hfoptions id="extra-tools">
+<hfoption id="typescript">
 
 ```ts
 const taskCompletionTool: ChatCompletionInputTool = {
@@ -506,6 +876,38 @@ const askQuestionTool: ChatCompletionInputTool = {
 const exitLoopTools = [taskCompletionTool, askQuestionTool];
 ```
 
+</hfoption>
+<hfoption id="python">
+
+```python
+task_completion_tool = {
+    "type": "function",
+    "function": {
+        "name": "task_complete",
+        "description": "Call this tool when the task given by the user is complete",
+        "parameters": {
+            "type": "object",
+            "properties": {},
+        }
+    }
+}
+ask_question_tool = {
+    "type": "function",
+    "function": {
+        "name": "ask_question",
+        "description": "Ask a question to the user to get more info required to solve or clarify their problem.",
+        "parameters": {
+            "type": "object",
+            "properties": {},
+        }
+    }
+}
+exit_loop_tools = [task_completion_tool, ask_question_tool]
+```
+
+</hfoption>
+</hfoptions>
+
 When calling any of these tools, the Agent will break its loop and give control back to the user for new input.
 
 ### The complete while loop
@@ -515,6 +917,9 @@ Behold our complete while loop.🎉
 The gist of our Agent's main while loop is that we simply iterate with the LLM alternating between tool calling and feeding it the tool results, and we do so **until the LLM starts to respond with two non-tool messages in a row**.
 
 This is the complete while loop:
+
+<hfoptions id="while-loop">
+<hfoption id="typescript">
 
 ```ts
 let numOfTurns = 0;
@@ -554,4 +959,50 @@ while (true) {
 	}
 }
 ```
+
+</hfoption>
+<hfoption id="python">
+
+```python
+num_of_turns = 0
+next_turn_should_call_tools = True
+while True:
+    try:
+        for chunk in self.process_single_turn_with_tools(
+            self.messages,
+            exit_loop_tools=exit_loop_tools,
+            exit_if_first_chunk_no_tool=num_of_turns > 0 and next_turn_should_call_tools,
+            abort_signal=opts.get("abort_signal")
+        ):
+            yield chunk
+    except Exception as err:
+        if isinstance(err, Exception) and str(err) == "AbortError":
+            return
+        raise err
+    
+    num_of_turns += 1
+    current_last = self.messages[-1]
+    
+    if (
+        current_last["role"] == "tool" and
+        current_last.get("name") and
+        current_last["name"] in [t["function"]["name"] for t in exit_loop_tools]
+    ):
+        return
+        
+    if current_last["role"] != "tool" and num_of_turns > MAX_NUM_TURNS:
+        return
+        
+    if current_last["role"] != "tool" and next_turn_should_call_tools:
+        return
+        
+    if current_last["role"] == "tool":
+        next_turn_should_call_tools = False
+    else:
+        next_turn_should_call_tools = True
+```
+
+</hfoption>
+</hfoptions>
+</rewritten_file>
 
