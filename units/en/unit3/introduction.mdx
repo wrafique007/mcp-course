@@ -1,15 +1,16 @@
 # Advanced MCP Development: Building Custom Workflow Servers for Claude Code
 
-Welcome to Unit 3! In this unit, we'll build a production-ready MCP server that enhances Claude Code with custom development workflows.
+Welcome to Unit 3! In this unit, we'll build a practical MCP server that enhances Claude Code with custom development workflows while learning all three MCP primitives.
 
 ## What You'll Build
 
-**Development Workflow Server** - An MCP server that makes Claude Code team-aware and workflow-intelligent:
+**PR Agent Workflow Server** - An MCP server that demonstrates how to make Claude Code team-aware and workflow-intelligent:
 
-- **Smart PR Management**: Automatic PR template selection based on code changes
-- **Post-Actions Automation**: React to GitHub Actions completion via webhooks and orchestrate follow-up tasks
-- **Team Communication**: Slack notifications with intelligent summaries of workflow results
-- **Claude Code Integration**: Connect your server so Claude Code understands your team's specific processes
+- **Smart PR Management**: Automatic PR template selection based on code changes using MCP Tools
+- **Project Context**: Access team guidelines and code standards through MCP Resources  
+- **CI/CD Monitoring**: Track GitHub Actions with Cloudflare Tunnel and standardized Prompts
+- **Hugging Face Hub Integration**: Specialized workflows for LLM and dataset pull requests
+- **Team Communication**: Slack notifications demonstrating all MCP primitives working together
 
 ## Real-World Case Study
 
@@ -25,19 +26,29 @@ We'll implement a practical scenario every development team faces:
 
 ## Key Learning Outcomes
 
-1. **Production MCP Server Architecture**: Security, error handling, and webhook management
-2. **GitHub Actions Integration**: Monitoring Actions runs, parsing results, and orchestrating follow-up workflows
-3. **Claude Code Enhancement**: Making Claude Code team-specific and workflow-aware
-4. **Multi-System Coordination**: Connecting GitHub, Slack, and CI/CD monitoring through a unified MCP interface
+1. **All Three MCP Primitives**: Master Tools, Resources, and Prompts through practical examples
+2. **MCP Server Development**: Build a functional server with proper structure and error handling
+3. **GitHub Actions Integration**: Use Cloudflare Tunnel to receive webhooks and process CI/CD events
+4. **Hugging Face Hub Workflows**: Create specialized workflows for LLM development teams
+5. **Multi-System Integration**: Connect GitHub, Slack, and Hugging Face Hub through MCP
+6. **Claude Code Enhancement**: Make Claude understand your team's specific workflows
 
-## Tutorial Structure
+## MCP Primitives in Action
 
-1. **Server Foundation**: Build the core MCP server with proper authentication and error handling
-2. **PR Template Intelligence**: Implement smart template selection based on file changes
-3. **Actions Monitoring**: Set up webhooks to track GitHub Actions completion and parse results
-4. **Slack Integration**: Create formatted notifications based on workflow outcomes
-5. **Claude Code Connection**: Configure Claude Code to use your workflow server
-6. **End-to-End Testing**: Demonstrate the complete workflow from PR creation to team notification
+This unit provides hands-on experience with all three MCP primitives:
+
+- **Tools** (Module 1): Functions Claude can call to analyze files and suggest templates
+- **Resources** (Module 2): Project context, team guidelines, and standards Claude can read
+- **Prompts** (Module 3): Standardized workflows for consistent team processes
+- **Integration** (Modules 4-5): All primitives working together for complex automation
+
+## Module Structure
+
+1. **Module 1: Build MCP Server** - Create a basic server with Tools for PR template suggestions
+2. **Module 2: Smart File Analysis** - Add Resources to access project context and guidelines
+3. **Module 3: GitHub Actions Integration** - Monitor CI/CD with Cloudflare Tunnel and Prompts
+4. **Module 4: Hugging Face Hub Integration** - Specialized workflows for LLM and dataset PRs
+5. **Module 5: Slack Notification** - Team communication integrating all MCP primitives
 
 ## Prerequisites
 
@@ -46,4 +57,4 @@ We'll implement a practical scenario every development team faces:
 - Claude Code installed and configured
 - Access to a GitHub repository for testing
 
-By the end of this unit, you'll have a production-ready MCP server that transforms Claude Code into a powerful team development assistant.
+By the end of this unit, you'll have built a complete MCP server that demonstrates how to transform Claude Code into a powerful team development assistant, with hands-on experience using all three MCP primitives.
