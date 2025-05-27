@@ -32,7 +32,7 @@ uv run server.py
 Configure in Claude Code:
 ```bash
 # Add the MCP server
-claude mcp add pr-agent "uv" "--directory" "/path/to/smart-file-analysis/solution" "run" "server.py"
+claude mcp add pr-agent -- uv --directory /path/to/smart-file-analysis/solution run server.py
 
 # Verify configuration
 claude mcp list

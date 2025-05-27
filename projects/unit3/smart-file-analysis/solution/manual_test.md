@@ -29,7 +29,7 @@ You should see:
    Add the server to Claude Code:
    ```bash
    # Add the MCP server
-   claude mcp add pr-agent "uv" "--directory" "/absolute/path/to/smart-file-analysis/solution" "run" "server.py"
+   claude mcp add pr-agent -- uv --directory /absolute/path/to/smart-file-analysis/solution run server.py
    
    # Verify it's configured
    claude mcp list

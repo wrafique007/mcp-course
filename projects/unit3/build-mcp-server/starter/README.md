@@ -53,7 +53,7 @@ Instead of using rigid rules based on file extensions or patterns, your tools sh
 2. Configure the MCP server in Claude Code:
    ```bash
    # Add the MCP server
-   claude mcp add pr-agent "uv" "--directory" "/absolute/path/to/module1/starter" "run" "server.py"
+   claude mcp add pr-agent -- uv --directory /absolute/path/to/module1/starter run server.py
    
    # Verify it's configured
    claude mcp list

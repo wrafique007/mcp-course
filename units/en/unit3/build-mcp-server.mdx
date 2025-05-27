@@ -82,7 +82,7 @@ Configure your server directly in Claude Code:
 
 ```bash
 # Add the MCP server to Claude Code
-claude mcp add pr-agent "uv" "--directory" "/absolute/path/to/starter" "run" "server.py"
+claude mcp add pr-agent -- uv --directory /absolute/path/to/starter run server.py
 
 # Verify the server is configured
 claude mcp list

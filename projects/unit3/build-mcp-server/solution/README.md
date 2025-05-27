@@ -24,7 +24,7 @@ Add the server to Claude Code:
 
 ```bash
 # Add the MCP server
-claude mcp add pr-agent "uv" "--directory" "/absolute/path/to/module1/solution" "run" "server.py"
+claude mcp add pr-agent -- uv --directory /absolute/path/to/module1/solution run server.py
 
 # Verify it's configured
 claude mcp list
