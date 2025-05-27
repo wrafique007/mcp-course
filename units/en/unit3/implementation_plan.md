@@ -1,283 +1,180 @@
-# Unit 3 Implementation Plan: Advanced MCP Development
+# Unit 3 Implementation Plan Enhancements: Complete MCP Primitives Coverage
 
 ## Overview
-This document outlines the implementation plan for Unit 3: Building Custom Workflow Servers for Claude Code. This unit bridges the gap between basic MCP concepts (Units 1-2) and production deployment (Unit 4).
 
-## Core Philosophy: Local "Toy" to Production Pipeline
+This document enhances the existing [implementation_plan.md](./implementation_plan.md) to ensure comprehensive coverage of all 3 MCP primitives while maintaining the solid foundation and timeline already established.
 
-**Unit 3**: Build it locally, see it work (focus on workflow logic)
-**Unit 4**: Ship it to production (add auth, deploy globally, handle real traffic)
+## MCP Primitives Integration Strategy
 
-## Module Structure: Jump-in Anywhere Design
+Rather than redesigning the entire unit, we'll enhance each existing module to naturally incorporate MCP primitives without changing the core learning goals or structure.
 
-Each module provides complete working solutions that serve as starting points for subsequent modules, allowing learners to begin at any point in the unit.
+## Enhanced Module Structure
 
 ### Module 1: Basic Workflow Server (30 min)
-**Learning Goal**: "I want Claude Code to help me create better PRs"
+**Existing Goal**: "I want Claude Code to help me create better PRs"  
+**+ MCP Primitive**: **Tools**
 
-**What Learners Build**:
+**Current Plan**:
 - Minimal MCP server with PR template suggestion
 - Simple rule-based template selection (file extension → template type)
-- Working Claude Code integration
 
-**Starter Code**: Empty MCP template
-**End State**: Working PR template suggester
-**For Unit 4**: Perfect base for Cloudflare Workers deployment
+**Enhancements**:
+- **Tool**: `analyze_file_changes` - Returns structured data about changed files for Claude to analyze
+- **Tool**: `get_pr_templates` - Lists available PR templates with metadata
+- **Tool**: `suggest_template` - Provides template recommendation based on file analysis
 
-**Key Files**:
-```
-/examples/unit3-module1-solution/
-├── server.py (or server.js)
-├── mcp_config.json
-└── templates/
-    ├── bug.md
-    ├── feature.md
-    └── docs.md
-```
+**What Claude Does**: Uses tools to gather file data, then intelligently decides which template to recommend and explains why.
+
+**Learning Focus**: Tool registration, schema definition, and letting Claude make smart decisions with structured data.
+
+---
 
 ### Module 2: Smart File Analysis (45 min)
-**Learning Goal**: "Make template selection actually intelligent"
+**Existing Goal**: "Make template selection actually intelligent"  
+**+ MCP Primitive**: **Resources**
 
-**What Learners Build**:
+**Current Plan**:
 - Context-aware file analysis (not just extensions)
-- Pattern matching logic (tests → test template, config → ops template)
-- Multi-file change analysis
+- Pattern matching logic and multi-file change analysis
 
-**Starter Code**: Module 1 solution
-**End State**: Intelligent template selection
-**For Unit 4**: Core logic ready for remote deployment
+**Enhancements**:
+- **Resource**: `file://templates/` - PR template files Claude can read and understand
+- **Resource**: `file://project-context/` - Project-specific guidelines, coding standards, team conventions
+- **Resource**: `git://recent-changes/` - Recent commit patterns and project history
+- **Resource**: `team://guidelines/` - Team-specific review processes and standards
 
-**New Concepts**:
-- File content analysis
-- Pattern recognition
-- Business logic separation
+**What Claude Does**: Reads project resources to understand context, then makes more informed template and workflow suggestions.
+
+**Learning Focus**: Resource schemas, URI patterns, and making project knowledge accessible to Claude.
+
+---
 
 ### Module 3: GitHub Actions Integration (45 min)
-**Learning Goal**: "Tell me when my tests pass/fail"
+**Existing Goal**: "Tell me when my tests pass/fail"  
+**+ MCP Primitive**: **Prompts**
 
-**What Learners Build**:
+**Current Plan**:
 - Local webhook receiver using Cloudflare Tunnel
-- GitHub Actions event parsing
-- Real-time CI/CD status in Claude Code
+- GitHub Actions event parsing and real-time CI/CD status
 
-**Starter Code**: Module 2 solution
-**End State**: Live CI/CD monitoring
-**For Unit 4**: Key feature that benefits from remote hosting
+**Enhancements**:
+- **Prompt**: "Analyze CI Results" - Standardized prompt for processing GitHub Actions outcomes
+- **Prompt**: "Generate Status Summary" - Consistent format for CI/CD status updates
+- **Prompt**: "Create Follow-up Tasks" - Generate next steps based on CI results
+- **Prompt**: "Draft Team Notification" - Standardized team communication about CI events
 
-**Technology Choice**: Cloudflare Tunnel (not ngrok)
-- **Why**: Seamless Unit 4 transition, better security, preview-optimized
-- **Bonus**: Uses Cloudflare preview feature for instant public URLs
-- **Educational**: Builds familiarity with Cloudflare ecosystem
+**What Claude Does**: Uses prompts to consistently analyze CI results and generate standardized team communications.
+
+**Learning Focus**: Prompt templates, workflow consistency, and reusable team processes.
+
+---
 
 ### Module 4: Team Communication (30 min)
-**Learning Goal**: "Update my team automatically"
+**Existing Goal**: "Update my team automatically"  
+**+ Integration**: **All Three Primitives Working Together**
 
-**What Learners Build**:
+**Current Plan**:
 - Slack webhook integration for notifications
 - Smart message formatting based on CI results
-- Fallback options for free-tier users (console/file output)
 
-**Starter Code**: Module 3 solution
-**End State**: Complete workflow automation
-**For Unit 4**: Ready for OAuth-protected remote deployment
+**Enhancements**:
+- **Tools**: `send_slack_message`, `get_team_members`, `track_notification_status`
+- **Resources**: `team://members/`, `slack://channels/`, `notification://templates/`
+- **Prompts**: "Format Team Update", "Choose Communication Channel", "Escalate if Critical"
 
-### Module 5: Polish & Claude Code Integration (30 min)
-**Learning Goal**: "Make it production-ready (locally)"
+**What Claude Does**: Combines tools (Slack API), resources (team data), and prompts (message formatting) for complete workflow automation.
 
-**What Learners Build**:
+**Learning Focus**: Primitive integration, workflow orchestration, and production patterns.
+
+---
+
+### Module 5: Polish & Integration (30 min)
+**Existing Goal**: "Make it production-ready (locally)"  
+**+ Orchestration**: **Complete Workflow Demonstration**
+
+**Current Plan**:
 - Error handling and logging
 - Configuration management
 - Complete Claude Code workflow demonstration
 
-**Starter Code**: Module 4 solution
-**End State**: Unit 4-ready codebase
-**For Unit 4**: Seamless transition to remote deployment
+**Enhancements**:
+- **Showcase**: End-to-end workflow using all primitives
+- **Demo**: "Create PR → Analyze Changes → Monitor CI → Notify Team"
+- **Testing**: Validate all primitives work together seamlessly
+- **Documentation**: How each primitive contributes to the workflow
 
-## Unit 3 → Unit 4 Transition Strategy
+**What Claude Does**: Demonstrates the complete team workflow automation with intelligent decision-making at each step.
 
-### Shared Codebase Approach
-- Unit 3 final solution becomes Unit 4 starter template
-- Same workflow logic, different deployment model
-- Learners see immediate value of productionizing their work
+**Learning Focus**: System integration, error handling, and preparing for Unit 4 deployment.
 
-### Knowledge Bridge
-| Unit 3 (Local) | Unit 4 (Production) |
-|----------------|-------------------|
-| Local MCP server | Cloudflare Workers deployment |
-| Cloudflare Tunnel | Native Cloudflare hosting |
-| File-based config | Environment variables |
-| Development webhooks | Production webhook security |
-| Direct Claude Code connection | `mcp-remote` client adapter |
+## Primitive Distribution
 
-### Natural Progression Points
-1. **Security**: "My webhook is public, how do I protect it?" → OAuth
-2. **Reliability**: "What if my laptop is off?" → Remote hosting
-3. **Scale**: "What about multiple team members?" → Shared deployment
-4. **Maintenance**: "How do I update this?" → CI/CD deployment
+| Module | Primary Primitive | Secondary | Learning Outcome |
+|--------|------------------|-----------|------------------|
+| 1 | **Tools** | - | Claude can call functions to get structured data |
+| 2 | **Resources** | Tools | Claude can read project context and make informed decisions |
+| 3 | **Prompts** | Resources | Claude can follow standardized workflows consistently |
+| 4 | **Integration** | All Three | All primitives work together for complex automation |
+| 5 | **Orchestration** | All Three | Production-ready workflow with proper error handling |
 
-## Repository Structure
+## Implementation Benefits
 
-```
-/examples/
-├── unit3-module1-solution/    # Basic workflow server
-├── unit3-module2-solution/    # Smart file analysis
-├── unit3-module3-solution/    # GitHub Actions integration
-├── unit3-module4-solution/    # Team communication
-├── unit3-final-solution/      # Complete local server
-└── unit4-starter/             # Unit 3 final → Unit 4 starting point
-```
+### Maintains Existing Strengths
+- ✅ **Same timeline** - 3 hours total, module breakdown unchanged
+- ✅ **Same learning goals** - Each module still has clear, practical objectives
+- ✅ **Same progression** - Local toy → production pipeline approach
+- ✅ **Same technology choices** - Cloudflare Tunnel, GitHub Actions, etc.
 
-## Free-Tier Compatibility
+### Adds MCP Depth
+- ✅ **Complete coverage** - All 3 MCP primitives with real examples
+- ✅ **Natural integration** - Primitives enhance existing modules rather than replace them
+- ✅ **Progressive complexity** - Tools → Resources → Prompts → Integration
+- ✅ **Real-world patterns** - How to combine primitives effectively
 
-### Core Features (Always Free)
-- Local MCP server development
-- Cloudflare Tunnel for webhooks
-- Basic GitHub Actions integration
-- File-based team notifications
+### Educational Enhancements
+- **Advanced MCP concepts** - Beyond basic server building from Unit 2
+- **Primitive synergy** - How tools, resources, and prompts work together
+- **Workflow standardization** - Using prompts for team consistency
+- **Context awareness** - Resources make Claude team and project aware
 
-### Upgrade Paths
-- Slack integration (free Slack workspaces)
-- Enhanced GitHub Actions (public repos)
-- Advanced notifications (email fallbacks)
+## Quiz Enhancement Areas for @burtenshaw
 
-### Unit 4 Preparation
-- All Unit 3 code runs on Cloudflare free tier
-- No premium services required for core functionality
-- Optional features clearly marked
+### Additional Quiz Topics
+- **Tools vs Resources vs Prompts** - When to use each primitive
+- **Resource URI patterns** - Designing discoverable resource schemas
+- **Prompt engineering** - Creating effective workflow templates
+- **Primitive integration** - Combining all three for complex workflows
 
-## Interactive Learning Elements
+### Sample Questions
+- "How would you expose team coding standards to Claude?" (Resources)
+- "What's the difference between a tool and a prompt?" (Concepts)
+- "How do you make workflow processes consistent across team members?" (Prompts)
 
-### Quiz Contribution Areas for @burtenshaw
+## Implementation Notes
 
-#### Module 1 Quizzes: MCP Server Fundamentals
-**Focus Areas**:
-- MCP protocol understanding
-- Client-server communication patterns
-- Tool registration and discovery
-- Configuration management
+### Code Structure
+- Each module's starter code includes framework for the new primitive
+- Solutions demonstrate both the existing functionality AND the primitive integration
+- No breaking changes to existing module goals or timelines
 
-**Sample Question Types**:
-- "Which MCP method is used for tool discovery?"
-- "How does Claude Code connect to MCP servers?"
-- "What's the difference between tools and resources in MCP?"
+### Testing Strategy
+- Test each primitive individually within modules
+- Test primitive integration in Module 4
+- Validate end-to-end workflow in Module 5
 
-#### Module 2 Quizzes: Logic & Pattern Recognition
-**Focus Areas**:
-- File analysis strategies
-- Business logic separation
-- Pattern matching concepts
-- Error handling in analysis
-
-**Sample Question Types**:
-- "How would you detect if a change is test-related?"
-- "What file patterns indicate a configuration change?"
-- "When should template selection fallback to defaults?"
-
-#### Module 3 Quizzes: Integration & Webhooks
-**Focus Areas**:
-- Webhook security concepts
-- GitHub Actions event types
-- Network tunneling basics
-- Event-driven architecture
-
-**Sample Question Types**:
-- "What GitHub Actions events trigger on PR completion?"
-- "How does Cloudflare Tunnel maintain security?"
-- "What's the difference between push and workflow_run events?"
-
-#### Module 4 Quizzes: Team Workflows
-**Focus Areas**:
-- Team communication patterns
-- Notification strategies
-- Fallback mechanisms
-- Workflow integration
-
-**Sample Question Types**:
-- "When should automated notifications be sent?"
-- "How do you handle notification failures?"
-- "What information is most valuable in CI/CD alerts?"
-
-#### Module 5 Quizzes: Production Readiness
-**Focus Areas**:
-- Error handling strategies
-- Configuration management
-- Monitoring and debugging
-- Performance considerations
-
-**Sample Question Types**:
-- "What configuration should never be hardcoded?"
-- "How do you debug MCP server connectivity issues?"
-- "What logs are essential for troubleshooting?"
-
-#### Unit 3 → Unit 4 Bridge Quiz
-**Focus Areas**:
-- Local vs remote deployment trade-offs
-- Security model differences
-- Scalability considerations
-- DevOps pipeline concepts
-
-**Sample Question Types**:
-- "Why might you choose remote deployment over local?"
-- "What security concerns arise with public webhook endpoints?"
-- "How does team collaboration change with remote servers?"
-
-### Hands-On Exercises
-- **Module Checkpoints**: "Quick Check" after each module
-- **Integration Tests**: End-to-end workflow verification
-- **Customization Challenges**: "Adapt this for your team's workflow"
-- **Troubleshooting Labs**: Common problems and solutions
-
-## Implementation Timeline
-
-### Week 1: Foundation
-- Module 1: Basic workflow server
-- Module 2: Smart file analysis
-- Create starter code templates
-
-### Week 2: Integration
-- Module 3: GitHub Actions + Cloudflare Tunnel
-- Module 4: Team communication
-- End-to-end testing
-
-### Week 3: Polish
-- Module 5: Production readiness
-- Unit 4 transition preparation
-- Interactive elements and quizzes
-
-### Week 4: Review & Refinement
-- Team feedback integration
-- Documentation polish
-- Community preview
-
-## Success Metrics
-
-### Learning Outcomes
-- Learners can build production-ready MCP servers locally
-- Understanding of workflow automation concepts
-- Confidence to tackle Unit 4 remote deployment
-- Practical skills applicable to real development teams
-
-### Technical Deliverables
-- 5 complete working code examples
-- Seamless Unit 4 transition codebase
-- Comprehensive troubleshooting documentation
-- Interactive assessment materials
+### Documentation
+- Each module explains the primitive it introduces
+- Show how the primitive enhances the existing functionality
+- Provide examples of other use cases for each primitive
 
 ## Next Steps
 
-1. **Team Review**: Gather feedback on this plan
-2. **Quiz Development**: Collaborate with @burtenshaw on assessment design
-3. **Module 1 Implementation**: Start with basic workflow server
-4. **Iterative Development**: Build and test each module sequentially
-
-## Questions for Team Discussion
-
-1. **Scope**: Is the 3-hour total time commitment appropriate?
-2. **Technology**: Any concerns about Cloudflare Tunnel?
-3. **Modularity**: Does the jump-in-anywhere approach work for our audience?
-4. **Unit 4 Bridge**: Is the transition strategy clear and compelling?
-5. **Free Tier**: Any features that might require paid services?
+1. **Enhance Module 1** - Add proper Tools implementation to existing file analysis
+2. **Design Resources** - Create resource schemas for Module 2 project context
+3. **Create Prompts** - Develop workflow prompt templates for Module 3
+4. **Integration Testing** - Ensure all primitives work together in Module 4
+5. **Documentation** - Update module READMEs with primitive explanations
 
 ---
 
-*This plan emphasizes practical, hands-on learning that prepares students for real-world MCP server development while maintaining a clear path to production deployment in Unit 4.*
+*This enhancement maintains the existing solid plan while ensuring learners get comprehensive MCP primitives education through practical workflow automation.*
