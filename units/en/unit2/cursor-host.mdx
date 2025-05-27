@@ -1,98 +1,84 @@
-# Cursor AI Integration
+# Using Your MCP Server in Cursor AI
 
 <CourseFloatingBanner chapter={2} classNames="absolute z-10 right-0 top-0" />
 
-The most seamless way to use our MCP sentiment analysis is directly within **Cursor AI** using the built-in MCP support. This integration allows you to perform sentiment analysis directly in your coding workflow without leaving your editor.
+**See your MCP server in action!** This integration demonstrates how your Gradio-based sentiment analysis server works seamlessly with professional development tools like **Cursor AI** through the MCP protocol.
 
-## Prerequisites
+<Tip>
 
-Before setting up the Cursor AI integration, ensure you have:
-- Cursor AI editor installed
-- Node.js and npm installed on your system
-- Access to the sentiment analysis MCP server
+This showcases the power of MCP: build with Gradio, deploy on Spaces, integrate with smolagents, and use anywhere—including professional IDEs like Cursor. MCP makes this interoperability effortless!
 
-## Configuration
+</Tip>
 
-Instead of manually editing JSON files, you can configure the MCP server directly through Cursor's settings interface:
+## Why This Integration Matters
 
-### Step 1: Open MCP Settings
+This section demonstrates the **complete workflow**:
 
-Use the keyboard shortcut `Ctrl + Shift + J` (or `Cmd + Shift + J` on Mac) to open Cursor settings, then navigate to the **MCP** tab from the left sidebar.
+- **Gradio**: Rapid prototyping and MCP server creation
+- **HF Spaces**: Free, instant deployment and hosting
+- **smolagents**: Seamless MCP client integration
+- **Cursor AI**: Professional development environment with built-in MCP support
 
-### Step 2: Add New MCP Server
+You'll see how these tools create a **production-ready pipeline** from development to deployment to real-world usage.
 
-1. Click **"Add new global MCP server"** to open the configuration panel
-2. Fill in the server configuration with the following details:
+## The Complete Ecosystem in Action
 
-*MAC*
+### What You've Built
+1. **Gradio MCP Server**: Created a sentiment analysis tool with automatic MCP protocol support
+2. **HF Spaces Deployment**: Hosted your server for free with global accessibility
+3. **smolagents Integration**: Connected your server to AI agents seamlessly
+
+### Now: Professional IDE Integration
+Connect your **MCP server** directly to **Cursor AI** for daily development use.
+
+## Quick Setup
+
+### Prerequisites
+- Cursor AI editor
+- Your sentiment analysis server deployed on **Hugging Face Spaces**
+
+### Configuration
+
+Open Cursor settings (`Ctrl + Shift + J` / `Cmd + Shift + J`) → **MCP** tab → **Add new global MCP server**:
+
+**macOS:**
 ```json
 {
   "mcpServers": {
     "sentiment-analysis": {
       "command": "npx",
-      "args": [
-        "-y",
-        "mcp-remote",
-        "https://YOURUSENAME-mcp-sentiment.hf.space/gradio_api/mcp/sse",
-        "--transport",
-        "sse-only"
-      ]
+      "args": ["-y", "mcp-remote", "https://YOURUSENAME-mcp-sentiment.hf.space/gradio_api/mcp/sse", "--transport", "sse-only"]
     }
   }
 }
 ```
 
-*Windows*
+**Windows:**
 ```json
 {
   "mcpServers": {
     "sentiment-analysis": {
       "command": "cmd",
-      "args": [
-        "/c",
-        "npx",
-        "-y",
-        "mcp-remote",
-        "https://YOURUSENAME-mcp-sentiment.hf.space/gradio_api/mcp/sse",
-        "--transport",
-        "sse-only"
-      ]
+      "args": ["/c", "npx", "-y", "mcp-remote", "https://YOURUSENAME-mcp-sentiment.hf.space/gradio_api/mcp/sse", "--transport", "sse-only"]
     }
   }
 }
 ```
 
-## Usage Examples
+## Experience the Integration
 
-Once configured, you can directly interact with Cursor AI's Agent for sentiment analysis:
+Ask Cursor AI to use your sentiment analysis tool:
+- "Analyze the sentiment of this user feedback"
+- "Check if this code comment is positive or negative"
+- "Help me understand the tone of this pull request description"
 
-### Basic Sentiment Analysis
+## What You've Accomplished
 
-Ask Cursor AI to analyze text sentiment:
-- "Analyze the sentiment of this text: 'I love this product!'"
-- "What's the sentiment of: 'This is terrible'"
-- "Check sentiment: 'It's okay, nothing special'"
+You've experienced the **complete MCP pipeline**:
 
-### Batch Analysis
+1. **Built** with Gradio's MCP-enabled interface
+2. **Deployed** on Hugging Face Spaces for global access
+3. **Integrated** with smolagents for AI agent workflows
+4. **Connected** to professional development tools like Cursor
 
-For multiple text samples, you can ask Cursor to analyze them sequentially:
-- "Analyze the sentiment of these comments: [list your text samples]"
-
-## Benefits
-
-This integration provides several advantages:
-
-- **Seamless Workflow**: No need to switch between applications or run separate scripts
-- **Real-time Analysis**: Get instant sentiment feedback while coding
-- **Context Awareness**: Analyze text directly from your editor without copy-pasting
-- **Development Efficiency**: Integrate sentiment analysis into your development process
-
-## Troubleshooting
-
-If you encounter issues with the Cursor AI integration:
-
-1. **Configuration Issues**: Verify that your `mcp.json` file is properly formatted and located in the correct directory
-2. **Connection Problems**: Ensure you have internet access and the MCP server is available
-3. **Permission Errors**: Check that Cursor AI has the necessary permissions to access the configuration file
-
-Make sure to restart Cursor AI after modifying the MCP configuration file for changes to take effect.
+This demonstrates how **Hugging Face's ecosystem** enables you to go from idea to production-ready AI tools that work across the entire development landscape.
