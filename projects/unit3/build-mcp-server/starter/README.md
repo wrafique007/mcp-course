@@ -50,35 +50,13 @@ Instead of using rigid rules based on file extensions or patterns, your tools sh
    uv run pytest test_server.py -v
    ```
 
-2. Configure the MCP server:
-   
-   **Option 1: Configure in Claude Desktop first (Recommended)**
-   
-   Add to Claude Desktop settings (`~/Library/Application Support/Claude/claude_desktop_config.json`):
-   ```json
-   {
-     "mcpServers": {
-       "pr-agent": {
-         "command": "uv",
-         "args": [
-           "--directory",
-           "/absolute/path/to/module1/starter",
-           "run",
-           "server.py"
-         ]
-       }
-     }
-   }
-   ```
-   
-   Then import into Claude Code:
+2. Configure the MCP server in Claude Code:
    ```bash
-   claude mcp import-from-desktop
-   ```
+   # Add the MCP server
+   claude mcp add pr-agent "uv" "--directory" "/absolute/path/to/module1/starter" "run" "server.py"
    
-   **Option 2: Add directly to Claude Code**
-   ```bash
-   claude mcp add pr-agent -- uv --directory /absolute/path/to/module1/starter run server.py
+   # Verify it's configured
+   claude mcp list
    ```
 
 3. Make some changes in a git repository and ask Claude to analyze your changes and suggest a PR template

@@ -76,29 +76,16 @@ Test your implementation with the provided test suite:
 uv run pytest test_server.py -v
 ```
 
-### 3. Test with Claude
+### 3. Test with Claude Code
 
-Configure your server in Claude Desktop settings, then import to Claude Code ([see documentation](https://docs.anthropic.com/en/docs/claude-code/tutorials#import-mcp-servers-from-claude-desktop)):
-
-```json
-{
-  "mcpServers": {
-    "pr-agent": {
-      "command": "uv",
-      "args": [
-        "--directory",
-        "/absolute/path/to/starter",
-        "run",
-        "server.py"
-      ]
-    }
-  }
-}
-```
+Configure your server directly in Claude Code:
 
 ```bash
-# Import Claude Desktop servers into Claude Code
-claude mcp import-from-desktop
+# Add the MCP server to Claude Code
+claude mcp add pr-agent "uv" "--directory" "/absolute/path/to/starter" "run" "server.py"
+
+# Verify the server is configured
+claude mcp list
 ```
 
 Then:

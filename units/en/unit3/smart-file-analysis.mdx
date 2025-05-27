@@ -104,24 +104,16 @@ ls projects/unit3/team-guidelines/
 # Should show: coding-standards.md, pr-guidelines.md
 ```
 
-### 2. Test with Claude
+### 2. Test with Claude Code
 
-Update your Claude Desktop configuration and import to Claude Code:
+Configure your server in Claude Code:
 
-```json
-{
-  "mcpServers": {
-    "pr-agent": {
-      "command": "uv",
-      "args": [
-        "--directory",
-        "/absolute/path/to/smart-file-analysis/starter",
-        "run",
-        "server.py"
-      ]
-    }
-  }
-}
+```bash
+# Add the MCP server
+claude mcp add pr-agent "uv" "--directory" "/absolute/path/to/smart-file-analysis/starter" "run" "server.py"
+
+# Verify it's configured
+claude mcp list
 ```
 
 Then ask Claude:

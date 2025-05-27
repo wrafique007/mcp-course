@@ -22,36 +22,22 @@ You should see:
 - Templates: bug.md, feature.md, docs.md, etc.
 - Team guidelines: coding-standards.md, pr-guidelines.md
 
-## Test 2: Test with Claude
+## Test 2: Test with Claude Code
 
-1. **Configure MCP Settings**
+1. **Configure MCP Server**
    
-   Add to your Claude Desktop MCP settings (`~/Library/Application Support/Claude/claude_desktop_config.json` on macOS):
-   
-   ```json
-   {
-     "mcpServers": {
-       "pr-agent": {
-         "command": "uv",
-         "args": [
-           "--directory",
-           "/absolute/path/to/smart-file-analysis/solution",
-           "run",
-           "server.py"
-         ]
-       }
-     }
-   }
-   ```
-
-2. **Import to Claude Code** ([documentation](https://docs.anthropic.com/en/docs/claude-code/tutorials#import-mcp-servers-from-claude-desktop)):
+   Add the server to Claude Code:
    ```bash
-   claude mcp import-from-desktop
+   # Add the MCP server
+   claude mcp add pr-agent "uv" "--directory" "/absolute/path/to/smart-file-analysis/solution" "run" "server.py"
+   
+   # Verify it's configured
+   claude mcp list
    ```
 
-3. **Restart Claude Desktop/Code** to pick up the new server
+2. **Restart Claude Code** to pick up the new server
 
-4. **Test Resource Access**
+3. **Test Resource Access**
    
    Ask Claude to test the new resources:
    - "What are our team's coding standards?"

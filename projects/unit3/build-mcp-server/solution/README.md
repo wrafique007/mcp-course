@@ -20,35 +20,14 @@ uv sync --all-extras
 
 ### 3. Configure the MCP Server
 
-#### Option 1: Configure in Claude Desktop first (Recommended)
-
-1. Add to your Claude Desktop MCP settings (`~/Library/Application Support/Claude/claude_desktop_config.json` on macOS):
-
-```json
-{
-  "mcpServers": {
-    "pr-agent": {
-      "command": "uv",
-      "args": [
-        "--directory",
-        "/absolute/path/to/module1/solution",
-        "run",
-        "server.py"
-      ]
-    }
-  }
-}
-```
-
-2. Import into Claude Code using the [import command](https://docs.anthropic.com/en/docs/claude-code/tutorials#import-mcp-servers-from-claude-desktop):
-```bash
-claude mcp import-from-desktop
-```
-
-#### Option 2: Add directly to Claude Code
+Add the server to Claude Code:
 
 ```bash
-claude mcp add pr-agent -- uv --directory /absolute/path/to/module1/solution run server.py
+# Add the MCP server
+claude mcp add pr-agent "uv" "--directory" "/absolute/path/to/module1/solution" "run" "server.py"
+
+# Verify it's configured
+claude mcp list
 ```
 
 ## Tools Available

@@ -30,34 +30,20 @@ This will check:
 uv run pytest test_server.py -v
 ```
 
-## Test 3: Test with Claude
+## Test 3: Test with Claude Code
 
-1. **Configure MCP Settings**
+1. **Configure MCP Server**
    
-   Add to your Claude Desktop MCP settings (`~/Library/Application Support/Claude/claude_desktop_config.json` on macOS):
-   
-   ```json
-   {
-     "mcpServers": {
-       "pr-agent": {
-         "command": "uv",
-         "args": [
-           "--directory",
-           "/absolute/path/to/module1/solution",
-           "run",
-           "server.py"
-         ]
-       }
-     }
-   }
-   ```
-
-2. **Import to Claude Code** ([documentation](https://docs.anthropic.com/en/docs/claude-code/tutorials#import-mcp-servers-from-claude-desktop)):
+   Add the server to Claude Code:
    ```bash
-   claude mcp import-from-desktop
+   # Add the MCP server
+   claude mcp add pr-agent "uv" "--directory" "/absolute/path/to/module1/solution" "run" "server.py"
+   
+   # Verify it's configured
+   claude mcp list
    ```
 
-3. **Restart Claude Desktop/Code** to pick up the new server
+2. **Restart Claude Code** to pick up the new server
 
 3. **Make Some Git Changes**
    
@@ -125,5 +111,5 @@ asyncio.run(test())
 
 - **"Git not found"**: Ensure you're in a git repository
 - **Import errors**: Check virtual environment is activated
-- **MCP connection failed**: Verify the path in Claude Code settings is absolute
-- **No tools showing**: Restart Claude Code after config changes
+- **MCP connection failed**: Verify the path in the claude mcp add command is absolute
+- **No tools showing**: Restart Claude Code after adding the server

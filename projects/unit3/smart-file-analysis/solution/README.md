@@ -29,26 +29,13 @@ uv run server.py
 
 ## Testing
 
-Configure in Claude Desktop:
-```json
-{
-  "mcpServers": {
-    "pr-agent": {
-      "command": "uv",
-      "args": [
-        "--directory",
-        "/path/to/smart-file-analysis/solution",
-        "run",
-        "server.py"
-      ]
-    }
-  }
-}
-```
-
-Then import to Claude Code:
+Configure in Claude Code:
 ```bash
-claude mcp import-from-desktop
+# Add the MCP server
+claude mcp add pr-agent "uv" "--directory" "/path/to/smart-file-analysis/solution" "run" "server.py"
+
+# Verify configuration
+claude mcp list
 ```
 
 ## Project Structure
