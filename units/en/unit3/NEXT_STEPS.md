@@ -47,32 +47,25 @@
 
 ## Module Implementation Roadmap
 
-### Module 2: Smart File Analysis (Resources)
-**Goal**: Add Resources for project context
-- **Starter**: Copy Module 1 solution as base
-- **Add**: Resource registration for templates/, project-context/, git history
+### Module 2: GitHub Actions Integration (Prompts)
+**Goal**: Add webhook handling and Prompts
+- **Starter**: Copy Module 1 solution
+- **Add**: Cloudflare Tunnel setup, webhook endpoint, prompt templates
 - **MDX**: Create module2/introduction.mdx
 - **_toctree**: Add reference when complete
 
-### Module 3: GitHub Actions Integration (Prompts)
-**Goal**: Add webhook handling and Prompts
+### Module 3: Hugging Face Hub Integration
+**Goal**: LLM-specific workflows
 - **Starter**: Copy Module 2 solution
-- **Add**: Cloudflare Tunnel setup, webhook endpoint, prompt templates
+- **Add**: Hub API integration, model card generation, dataset validation
 - **MDX**: Create module3/introduction.mdx
 - **_toctree**: Add reference when complete
 
-### Module 4: Hugging Face Hub Integration
-**Goal**: LLM-specific workflows
-- **Starter**: Copy Module 3 solution
-- **Add**: Hub API integration, model card generation, dataset validation
-- **MDX**: Create module4/introduction.mdx
-- **_toctree**: Add reference when complete
-
-### Module 5: Slack Notification (All Primitives)
+### Module 4: Slack Notification (All Primitives)
 **Goal**: Complete integration
-- **Starter**: Copy Module 4 solution
+- **Starter**: Copy Module 3 solution
 - **Add**: Slack webhooks, message formatting, full workflow
-- **MDX**: Create module5/introduction.mdx
+- **MDX**: Create module4/introduction.mdx
 - **_toctree**: Add reference when complete
 
 ## Testing Checklist for Each Module
@@ -132,4 +125,4 @@ build a PR agent that analyzes git changes and suggests templates.
 2. **FastMCP is used throughout** - This is the modern API
 3. **uv replaces pip** - Following MCP documentation recommendations
 4. **Focus is on learning** - Production concerns deferred to Unit 4
-5. **All MCP primitives covered** - Tools (M1), Resources (M2), Prompts (M3), Integration (M4-5)
+5. **Core MCP primitives covered** - Tools (M1), Prompts (M2), Integration (M3-4)

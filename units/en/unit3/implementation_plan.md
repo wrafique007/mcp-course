@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document enhances the existing [implementation_plan.md](./implementation_plan.md) to ensure comprehensive coverage of all 3 MCP primitives while maintaining the solid foundation and timeline already established.
+This document enhances the existing [implementation_plan.md](./implementation_plan.md) to ensure comprehensive coverage of the core MCP primitives (Tools and Prompts) while maintaining the solid foundation and timeline already established.
 
 ## MCP Primitives Integration Strategy
 
@@ -29,27 +29,7 @@ Rather than redesigning the entire unit, we'll enhance each existing module to n
 
 ---
 
-### Module 2: Smart File Analysis (45 min)
-**Existing Goal**: "Make template selection actually intelligent"  
-**+ MCP Primitive**: **Resources**
-
-**Current Plan**:
-- Context-aware file analysis (not just extensions)
-- Pattern matching logic and multi-file change analysis
-
-**Enhancements**:
-- **Resource**: `file://templates/` - PR template files Claude can read and understand
-- **Resource**: `file://project-context/` - Project-specific guidelines, coding standards, team conventions
-- **Resource**: `git://recent-changes/` - Recent commit patterns and project history
-- **Resource**: `team://guidelines/` - Team-specific review processes and standards
-
-**What Claude Does**: Reads project resources to understand context, then makes more informed template and workflow suggestions.
-
-**Learning Focus**: Resource schemas, URI patterns, and making project knowledge accessible to Claude.
-
----
-
-### Module 3: GitHub Actions Integration (45 min)
+### Module 2: GitHub Actions Integration (45 min)
 **Existing Goal**: "Tell me when my tests pass/fail"  
 **+ MCP Primitive**: **Prompts**
 
@@ -69,7 +49,7 @@ Rather than redesigning the entire unit, we'll enhance each existing module to n
 
 ---
 
-### Module 4: Team Communication (30 min)
+### Module 3: Team Communication (45 min)
 **Existing Goal**: "Update my team automatically"  
 **+ Integration**: **All Three Primitives Working Together**
 
@@ -88,7 +68,7 @@ Rather than redesigning the entire unit, we'll enhance each existing module to n
 
 ---
 
-### Module 5: Polish & Integration (30 min)
+### Module 4: Polish & Integration (30 min)
 **Existing Goal**: "Make it production-ready (locally)"  
 **+ Orchestration**: **Complete Workflow Demonstration**
 
@@ -112,10 +92,9 @@ Rather than redesigning the entire unit, we'll enhance each existing module to n
 | Module | Primary Primitive | Secondary | Learning Outcome |
 |--------|------------------|-----------|------------------|
 | 1 | **Tools** | - | Claude can call functions to get structured data |
-| 2 | **Resources** | Tools | Claude can read project context and make informed decisions |
-| 3 | **Prompts** | Resources | Claude can follow standardized workflows consistently |
-| 4 | **Integration** | All Three | All primitives work together for complex automation |
-| 5 | **Orchestration** | All Three | Production-ready workflow with proper error handling |
+| 2 | **Prompts** | Tools | Claude can follow standardized workflows consistently |
+| 3 | **Integration** | Tools & Prompts | All primitives work together for complex automation |
+| 4 | **Orchestration** | Tools & Prompts | Production-ready workflow with proper error handling |
 
 ## Implementation Benefits
 
@@ -126,9 +105,9 @@ Rather than redesigning the entire unit, we'll enhance each existing module to n
 - ✅ **Same technology choices** - Cloudflare Tunnel, GitHub Actions, etc.
 
 ### Adds MCP Depth
-- ✅ **Complete coverage** - All 3 MCP primitives with real examples
+- ✅ **Complete coverage** - Core MCP primitives (Tools and Prompts) with real examples
 - ✅ **Natural integration** - Primitives enhance existing modules rather than replace them
-- ✅ **Progressive complexity** - Tools → Resources → Prompts → Integration
+- ✅ **Progressive complexity** - Tools → Prompts → Integration
 - ✅ **Real-world patterns** - How to combine primitives effectively
 
 ### Educational Enhancements
