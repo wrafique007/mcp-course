@@ -219,7 +219,7 @@ In the next section, we'll explore the ecosystem of MCP servers available on Hug
 
 ## Code Clients
 
-You can also use the MCP Client in within code so that the tools are available to the LLM. Let's explore some examples in `smolagents`.
+You can also use the MCP Client within code so that the tools are available to the LLM. Let's explore some examples in `smolagents`.
 
 First, let's explore our weather server from the previous page. In `smolagents`, we can use the `ToolCollection` class to automatically discover and register tools from an MCP server. This is done by passing the `StdioServerParameters` or `SSEServerParameters` to the `ToolCollection.from_mcp` method. We can then print the tools to the console.
 
