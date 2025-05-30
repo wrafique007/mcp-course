@@ -48,10 +48,10 @@ To cite this repository in publications:
 
 ```
 @misc{mcp-course,
-  author = {Your Name},
+  author = Burtenshaw, Ben,
   title = {The Model Context Protocol Course},
   year = {2025},
-  howpublished = {\url{https://github.com/yourusername/mcp-course}},
+  howpublished = {\url{https://github.com/huggingface/mcp-course}},
   note = {GitHub repository},
 }
 ```
