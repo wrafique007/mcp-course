@@ -1,4 +1,4 @@
-# Tiny Agents: an MCP-powered agent in 50 lines of code
+# Building Tiny Agents with MCP and the Hugging Face Hub
 
 Now that we've built MCP servers in Gradio and learned about creating MCP clients, let's complete our end-to-end application by building an agent that can seamlessly interact with our sentiment analysis tool. This section builds on the project [Tiny Agents](https://huggingface.co/blog/tiny-agents), which demonstrates a super simple way of deploying MCP clients that can connect to services like our Gradio sentiment analysis server.
 
@@ -8,6 +8,14 @@ In this final exercise of Unit 2, we will walk you through how to implement both
 <figcaption>Image credit https://x.com/adamdotdev</figcaption>
 
 ## Installation
+
+Let's install the necessary packages to build our Tiny Agents.
+
+<Tip>
+
+Some MCP Clients, notably Claude Desktop, do not yet support SSE-based MCP Servers. In those cases, you can use a tool such as [mcp-remote](https://github.com/geelen/mcp-remote). First install Node.js. Then, add the following to your own MCP Client config:
+
+</Tip>
 
 <hfoptions id="installation">
 <hfoption id="typescript">
@@ -23,9 +31,9 @@ pnpm add @huggingface/tiny-agents
 Then, we need to install the `mcp-remote` package.
 
 ```bash
-npm install @mcpjs/mcp-remote
+npm install mcp-remote
 # or
-pnpm add @mcpjs/mcp-remote
+pnpm add mcp-remote
 ```
 
 </hfoption>
@@ -40,7 +48,13 @@ pip install "huggingface_hub[mcp]>=0.32.0"
 Then, we need to install the `mcp-remote` package.
 
 ```bash
-pip install mcp-remote
+npm install mcp-remote
+```
+
+And we'll need to install `npx` to run the `mcp-remote` command.
+
+```bash
+npm install -g npx
 ```
 
 </hfoption>
@@ -107,10 +121,9 @@ The JSON file will look like this:
 		{
 			"type": "stdio",
 			"config": {
-				"command": "python",
+				"command": "npx",
 				"args": [
-					"-m", 
-					"mcp_remote", 
+					"mcp-remote", 
 					"http://localhost:7860/gradio_api/mcp/sse"
 				]
 			}
@@ -171,10 +184,9 @@ We could also use an open source model running locally with Tiny Agents.
 		{
 			"type": "stdio",
 			"config": {
-				"command": "python",
+				"command": "npx",
 				"args": [
-					"-m",
-					"mcp_remote",
+					"mcp-remote",
 					"http://localhost:1234/v1/mcp/sse"
 				]
 			}
@@ -230,10 +242,9 @@ agent = Agent(
     provider="nebius",
     servers=[
         {
-            "command": "python",
+            "command": "npx",
             "args": [
-                "-m",
-                "mcp_remote",
+                "mcp-remote",
                 "http://localhost:7860/gradio_api/mcp/sse"  # Your Gradio MCP server
             ]
         }
