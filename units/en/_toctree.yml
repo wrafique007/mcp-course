@@ -43,8 +43,6 @@
     title: "Module 1: Build MCP Server"
   - local: unit3/github-actions-integration
     title: "Module 2: GitHub Actions Integration"
-  - local: unit3/hugging-face-hub-integration
-    title: "Module 3: Hugging Face Hub Integration"
   - local: unit3/slack-notification
-    title: "Module 4: Slack Notification"
+    title: "Module 3: Slack Notification"
 
