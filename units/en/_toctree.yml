@@ -41,7 +41,7 @@
   - local: unit2/tiny-agents
     title: Building a Tiny Agent with TypeScript
 
-- title: "3. Use Case: Build a Pull Request Agent on the Hub"
+- title: "3.1. Use Case: Build a Pull Request Agent on the Hub"
   sections:
   - local: unit3/introduction
     title: Build a Pull Request Agent on the Hugging Face Hub
@@ -55,8 +55,3 @@
     title: Webhook Listener
   - local: unit3/conclusion
     title: Conclusion
-
-- title: "Bonus Units"
-  sections:
-  - local: unit4/introduction
-    title: Coming Soon

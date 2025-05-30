@@ -110,7 +110,7 @@ async def webhook_handler(request: Request, background_tasks: BackgroundTasks):
         return {"error": "incorrect secret"}, 400
 ```
 
-The first and most important step is security validation. We check the `X-Webhook-Secret` header against our configured secret to ensure the webhook is legitimate.
+The first step is security validation. We check the `X-Webhook-Secret` header against our configured secret to ensure the webhook is legitimate.
 
 <Tip>
 
@@ -167,7 +167,7 @@ Now for the event filtering logic:
 
 This filtering ensures we only process the events we care about - new discussion comments. We ignore other events like repository creation, model uploads, etc.
 
-The crucial part here is using `background_tasks.add_task()` to process the webhook asynchronously. This allows us to return a response quickly (within seconds) while the actual tag processing happens in the background.
+We use FastAPI's `background_tasks.add_task()` to process the webhook asynchronously. This allows us to return a response quickly (within seconds) while the actual tag processing happens in the background.
 
 <Tip>
 
