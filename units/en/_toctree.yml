@@ -43,15 +43,15 @@
 
 - title: "3.1. Use Case: Build a Pull Request Agent on the Hub"
   sections:
-  - local: unit3/introduction
+  - local: unit3_1/introduction
     title: Build a Pull Request Agent on the Hugging Face Hub
-  - local: unit3/setting-up-the-project
+  - local: unit3_1/setting-up-the-project
     title: Setting up the Project
-  - local: unit3/creating-the-mcp-server
+  - local: unit3_1/creating-the-mcp-server
     title: Creating the MCP Server
-  - local: unit3/mcp-client
+  - local: unit3_1/mcp-client
     title: MCP Client
-  - local: unit3/webhook-listener
+  - local: unit3_1/webhook-listener
     title: Webhook Listener
-  - local: unit3/conclusion
+  - local: unit3_1/conclusion
     title: Conclusion
