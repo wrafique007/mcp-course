@@ -43,7 +43,7 @@ Now that we have the tools, we can create a simple agent that uses them to answe
 Please create an access token on your Hugging Face account, and set the access token with the environment variable  `HUGGINGFACE_API_TOKEN`.
 
 ```python
-model = InferenceClientModel(token=os.getenv("HUGGINGFACE_API_TOKEN"))
+model = InferenceClientModel(token=os.getenv("HF_TOKEN"))
 agent = CodeAgent(tools=[*tools], model=model)
 ```
 
