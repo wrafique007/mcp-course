@@ -1,23 +1,46 @@
 # Module 1: Build MCP Server
 
-## Introduction
+## The PR Chaos at CodeCraft Studios
 
-In this module, you'll build your first MCP server for the PR Agent - a tool that helps developers create better pull requests by analyzing code changes and suggesting appropriate templates.
+It's your first week at CodeCraft Studios, and you're witnessing something that makes every developer cringe. The team's pull requests look like this:
+
+- "stuff" 
+- "more changes"
+- "fix"
+- "update things"
+
+Meanwhile, the code review backlog is growing because reviewers can't understand what changed or why. Sarah from the backend team spent 30 minutes trying to figure out what "various improvements" actually meant, while Mike from frontend had to dig through 47 files to understand a "small fix."
+
+The team knows they need better PR descriptions, but everyone's too busy shipping features to write detailed explanations. They need a solution that helps without slowing them down.
+
+**Your mission**: Build an intelligent PR Agent that analyzes code changes and suggests helpful descriptions automatically.
+
+## What You'll Build
+
+In this first module, you'll create the foundation of CodeCraft Studios' automation system: an MCP server that transforms how the team writes pull requests. This module focuses on core MCP concepts that you'll build upon in Modules 2 and 3.
 
 ## What You Will Learn
 
-- How to create a basic MCP server using FastMCP
-- Implementing MCP Tools for data retrieval and analysis  
-- Letting Claude make intelligent decisions based on raw data
-- Testing and validating your MCP server
+In this foundational module, you'll master:
+- **How to create a basic MCP server using FastMCP** - The building blocks for Modules 2 and 3
+- **Implementing MCP Tools for data retrieval and analysis** - The core primitive you'll use throughout Unit 3  
+- **Letting Claude make intelligent decisions based on raw data** - A key principle for all MCP development
+- **Testing and validating your MCP server** - Essential skills for building reliable tools
 
 ## Overview
 
-The PR Agent demonstrates a key principle of MCP development: instead of hard-coding logic and rules, we provide Claude with raw data and let it use its intelligence to make decisions. This module focuses on implementing three essential tools:
+Your PR Agent will solve CodeCraft Studios' problem using a key principle of MCP development: instead of hard-coding rigid rules about what makes a good PR, you'll provide Claude with raw git data and let it intelligently suggest appropriate descriptions.
 
-1. **analyze_file_changes** - Retrieves git diff information and changed files
-2. **get_pr_templates** - Lists available PR templates
-3. **suggest_template** - Allows Claude to recommend the most appropriate template
+This approach works because:
+- **Flexible analysis**: Claude can understand context that simple rules miss
+- **Natural language**: Suggestions feel human, not robotic
+- **Adaptable**: Works for any codebase or coding style
+
+You'll implement three essential tools that establish patterns for the entire automation system:
+
+1. **analyze_file_changes** - Retrieves git diff information and changed files (data collection)
+2. **get_pr_templates** - Lists available PR templates (resource management)  
+3. **suggest_template** - Allows Claude to recommend the most appropriate template (intelligent decision-making)
 
 ## Getting Started
 
@@ -43,11 +66,13 @@ uv sync --all-extras
 
 ### Your Task
 
-Open `server.py` and implement the three tools following the TODO comments. The starter code provides the basic structure - you need to:
+This is your first hands-on MCP development experience! Open `server.py` and implement the three tools following the TODO comments. The starter code provides the basic structure - you need to:
 
-1. Implement `analyze_file_changes` to run git commands and return diff data
-2. Implement `get_pr_templates` to manage and return PR templates
-3. Implement `suggest_template` to map change types to templates
+1. **Implement `analyze_file_changes`** to run git commands and return diff data
+2. **Implement `get_pr_templates`** to manage and return PR templates  
+3. **Implement `suggest_template`** to map change types to templates
+
+Don't worry about making everything perfect - you'll refine these skills as you progress through the unit.
 
 ### Design Philosophy
 
@@ -57,6 +82,10 @@ Unlike traditional systems that categorize changes based on file extensions or r
 - Let Claude analyze the actual code changes
 - Allow Claude to make intelligent template suggestions
 - Keep the logic simple - Claude handles the complexity
+
+<Tip>
+**MCP Philosophy**: Instead of building complex logic into your tools, provide Claude with rich data and let its intelligence make the decisions. This makes your code simpler and more flexible than traditional rule-based systems.
+</Tip>
 
 ## Testing Your Implementation
 
@@ -123,6 +152,10 @@ except Exception as e:
     return json.dumps({"error": str(e)})
 ```
 
+<Tip warning={true}>
+**Error Handling**: Always return valid JSON from your tools, even for errors. Claude needs structured data to understand what went wrong and provide helpful responses to users.
+</Tip>
+
 ## Troubleshooting
 
 - **Import errors**: Ensure you've run `uv sync`
@@ -132,10 +165,30 @@ except Exception as e:
 
 ## Next Steps
 
-Once you've completed this module:
-1. Review the solution in `/projects/unit3/build-mcp-server/solution/`
-2. Compare your approach with the provided implementation
-3. Move on to Module 2 to integrate GitHub Actions monitoring
+Congratulations! You've built your first MCP server with Tools - the foundation for everything that follows in Unit 3.
+
+### What you've accomplished in Module 1:
+- **Created MCP Tools** that provide Claude with structured data
+- **Implemented the core MCP philosophy** - let Claude make intelligent decisions from raw data
+- **Built a practical PR Agent** that can analyze code changes and suggest templates
+- **Established testing patterns** with validation scripts and unit tests
+
+### Key patterns you can reuse:
+- **Data collection tools** that gather information from external sources
+- **Intelligent analysis** where Claude processes raw data to make decisions  
+- **Error handling** that returns structured JSON responses
+- **Testing strategies** for MCP server development
+
+### What to do next:
+1. **Review the solution** in `/projects/unit3/build-mcp-server/solution/` to see different implementation approaches
+2. **Compare your implementation** with the provided solution - there's no single "right" way to solve the problem
+3. **Test your tools thoroughly** - try them with different types of code changes to see how Claude adapts
+4. **Move on to Module 2** where you'll add real-time webhook capabilities and learn about MCP Prompts for workflow standardization
+
+Module 2 will build directly on the server you created here, adding dynamic event handling to complement your static file analysis tools!
+
+### The story continues...
+With your PR Agent working, CodeCraft Studios developers are already writing better pull requests. But next week, you'll face a new challenge: critical CI/CD failures are slipping through unnoticed. Module 2 will add real-time monitoring to catch these issues before they reach production.
 
 ## Additional Resources
 

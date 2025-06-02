@@ -1,10 +1,30 @@
 # Module 3: Slack Notification
 
-Welcome to the final module! You'll integrate Tools and Prompts to create a team notification system that sends formatted Slack messages about CI/CD events, demonstrating how all MCP primitives work together.
+## The Communication Gap Crisis
+
+Week 3 at CodeCraft Studios. Your automation system is already transforming how the team works:
+- **PR Agent** (Module 1): Developers are writing clear, helpful pull request descriptions
+- **CI/CD Monitor** (Module 2): The team catches test failures immediately, preventing bugs from reaching production
+
+The team is feeling much more confident... until Monday morning brings a new crisis.
+
+The frontend team (Emma and Jake) spent the entire weekend debugging a nasty API integration issue. They tried everything: checked their network calls, validated request formats, even rewrote the error handling. Finally, at 2 AM Sunday, they discovered the backend team had fixed this exact issue on Friday and deployed the fix to staging - but forgot to announce it.
+
+"We wasted 12 hours solving a problem that was already fixed!" Emma says, frustrated.
+
+Meanwhile, the design team finished the new user onboarding flow illustrations last week, but the frontend team didn't know they were ready. Those beautiful assets are still sitting unused while the team ships a temporary design.
+
+The team realizes they have an information silo problem. Everyone's working hard, but they're not communicating effectively about what's happening when.
+
+**Your mission**: Complete the automation system with intelligent Slack notifications that keep the whole team informed about important developments automatically.
 
 ## What You'll Build
 
-Building on Modules 1 and 2, you'll add:
+This final module completes the CodeCraft Studios transformation. You'll integrate Tools and Prompts to create a smart notification system that sends formatted Slack messages about CI/CD events, demonstrating how all MCP primitives work together in a real-world scenario.
+
+## What You'll Build
+
+Building on the foundation from Modules 1 and 2, you'll add the final piece of the puzzle:
 - **Slack webhook tool** for sending messages to your team channel
 - **Two notification prompts** that intelligently format CI events
 - **Complete integration** showing all MCP primitives working together
@@ -19,9 +39,10 @@ By the end of this module, you'll understand:
 
 ## Prerequisites
 
-- Completed Modules 1 and 2
-- A Slack workspace where you can add webhooks
-- Basic understanding of REST APIs
+You'll need everything from the previous modules plus:
+- **Completed Modules 1 and 2** - This module directly extends your existing MCP server
+- **A Slack workspace** where you can create incoming webhooks (personal workspaces work fine)
+- **Basic understanding of REST APIs** - You'll be making HTTP requests to Slack's webhook endpoints
 
 ## Key Concepts
 
@@ -35,13 +56,13 @@ This module demonstrates the complete workflow:
 
 ### Slack Markdown Formatting
 
-You'll use Slack's markdown for rich messages:
-- `*bold text*` for emphasis
-- `_italic text_` for details
-- `` `code blocks` `` for technical info
-- `> quoted text` for summaries
-- Emoji: ✅ ❌ 🚀 ⚠️
-- Links: `<https://github.com/user/repo|Repository>`
+You'll use [Slack's markdown](https://api.slack.com/reference/surfaces/formatting) for rich messages:
+- [`*bold text*`](https://api.slack.com/reference/surfaces/formatting#visual-styles) for emphasis
+- [`_italic text_`](https://api.slack.com/reference/surfaces/formatting#visual-styles) for details
+- [`` `code blocks` ``](https://api.slack.com/reference/surfaces/formatting#inline-code) for technical info
+- [`> quoted text`](https://api.slack.com/reference/surfaces/formatting#quotes) for summaries
+- [Emoji](https://api.slack.com/reference/surfaces/formatting#emoji): ✅ ❌ 🚀 ⚠️
+- [Links](https://api.slack.com/reference/surfaces/formatting#linking-urls): `<https://github.com/user/repo|Repository>`
 
 ## Project Structure
 
@@ -63,17 +84,17 @@ slack-notification/
 ### Step 1: Set Up Slack Integration (10 min)
 
 1. Create a Slack webhook:
-   - Go to https://api.slack.com/apps
-   - Create new app → "From scratch"
+   - Go to [Slack API Apps](https://api.slack.com/apps)
+   - Create new app → "From scratch" ([Creating an app guide](https://api.slack.com/authentication/basics#creating))
    - App Name: "MCP Course Notifications"
    - Choose your workspace
-   - Go to "Features" → "Incoming Webhooks"
-   - Activate incoming webhooks
+   - Go to "Features" → "[Incoming Webhooks](https://api.slack.com/messaging/webhooks)"
+   - [Activate incoming webhooks](https://api.slack.com/messaging/webhooks#enable_webhooks)
    - Click "Add New Webhook to Workspace"
-   - Choose channel and authorize
+   - Choose channel and authorize ([Webhook setup guide](https://api.slack.com/messaging/webhooks#getting_started))
    - Copy the webhook URL
 
-2. Test webhook works:
+2. Test webhook works (following [webhook posting examples](https://api.slack.com/messaging/webhooks#posting_with_webhooks)):
    ```bash
    curl -X POST -H 'Content-type: application/json' \
      --data '{"text":"Hello from MCP Course!"}' \
@@ -90,7 +111,13 @@ slack-notification/
    - Never commit webhook URLs to version control (add to .gitignore)
    - Treat it like a password - anyone with this URL can send messages to your channel
 
+<Tip warning={true}>
+**Security Alert**: Webhook URLs are sensitive credentials! Anyone with your webhook URL can send messages to your Slack channel. Always store them as environment variables and never commit them to version control.
+</Tip>
+
 ### Step 2: Add Slack Tool (15 min)
+
+Now that you have a working webhook, you'll add a new MCP tool to your existing server.py from Module 2. This tool will handle sending notifications to Slack by making HTTP requests to the webhook URL.
 
 Add this tool to your server.py:
 
@@ -123,6 +150,8 @@ def send_slack_notification(message: str) -> str:
 ```
 
 ### Step 3: Create Formatting Prompts (15 min)
+
+Next, you'll add MCP Prompts to your server - this is where the magic happens! These prompts will work with Claude to automatically format your GitHub webhook data into well-structured Slack messages. Remember from Module 1 that Prompts provide reusable instructions that Claude can use consistently.
 
 Implement two prompts that generate Slack-formatted messages:
 
@@ -175,7 +204,9 @@ Implement two prompts that generate Slack-formatted messages:
 
 ### Step 4: Test Complete Workflow (10 min)
 
-1. Start all services:
+Now comes the exciting part - testing your complete MCP workflow! You'll have all three components working together: webhook capture from Module 2, prompt formatting from this module, and Slack notifications.
+
+1. Start all services (just like in Module 2, but now with Slack integration):
    ```bash
    # Terminal 1: Start webhook server
    python webhook_server.py
@@ -187,16 +218,23 @@ Implement two prompts that generate Slack-formatted messages:
    cloudflared tunnel --url http://localhost:8080
    ```
 
-2. Test with Claude Code:
-   - Configure GitHub webhook with tunnel URL
-   - Push changes to trigger GitHub Actions
-   - Ask Claude to use the formatting prompts
-   - Send formatted message using the Slack tool
-   - Verify professional notification appears in Slack
+2. Test the complete integration with Claude Code:
+   - **Configure GitHub webhook** with tunnel URL (same as Module 2)
+   - **Push changes** to trigger GitHub Actions 
+   - **Ask Claude** to check recent events and format them using your prompts
+   - **Let Claude send** the formatted message using your Slack tool
+   - **Verify** notifications appear in your Slack channel
 
 ### Step 5: Verify Integration (5 min)
 
 You can test your implementation without setting up a real GitHub repository! See `manual_test.md` for curl commands that simulate GitHub webhook events.
+
+**Understanding the webhook event flow:**
+- Your webhook server (from Module 2) captures GitHub events and stores them in `github_events.json`
+- Your MCP tools read from this file to get recent CI/CD activity  
+- Claude uses your formatting prompts to create readable messages
+- Your Slack tool sends the formatted messages to your team channel
+- This creates a complete pipeline: GitHub → Local Storage → Claude Analysis → Slack Notification
 
 **Quick Test Workflow:**
 1. Use curl to send fake GitHub events to your webhook server
@@ -260,12 +298,12 @@ Claude:
 - Ensure Slack app has proper permissions
 
 ### Message Formatting
-- Slack markdown differs from GitHub markdown
+- [Slack markdown](https://api.slack.com/reference/surfaces/formatting) differs from GitHub markdown
 - Test message formatting manually before automating
-- Handle special characters in commit messages properly
+- Handle special characters in commit messages properly ([formatting reference](https://api.slack.com/reference/surfaces/formatting#escaping))
 
 ### Network Errors
-- Add basic timeout handling to webhook requests
+- Add basic timeout handling to webhook requests ([webhook error handling](https://api.slack.com/messaging/webhooks#handling_errors))
 - Return meaningful error messages from the tool
 - Check internet connectivity if requests fail
 
@@ -278,6 +316,34 @@ You've now built a complete MCP workflow that demonstrates:
 - **Real-world application** that teams can actually use
 
 This shows the power of MCP for building practical development automation tools!
+
+<Tip>
+**Key Learning**: You've now built a complete MCP workflow that combines Tools (for external API calls) with Prompts (for consistent formatting). This pattern of Tools + Prompts is fundamental to advanced MCP development and can be applied to many other automation scenarios.
+</Tip>
+
+## Next Steps
+
+Congratulations! You've completed the final module of Unit 3 and built a complete end-to-end automation system. Your journey through all three modules has given you hands-on experience with:
+
+- **Module 1**: MCP Tools and intelligent data analysis
+- **Module 2**: Real-time webhooks and MCP Prompts
+- **Module 3**: External API integration and workflow completion
+
+### What to do next:
+1. **Test your complete system** - Try triggering real GitHub events and watch the full pipeline work
+2. **Experiment with customization** - Modify the Slack message formats or add new notification types
+3. **Review the Unit 3 Conclusion** - Reflect on everything you've learned and explore next steps
+4. **Share your success** - Show teammates how MCP can automate your development workflows
+
+You now have a solid foundation for building intelligent automation systems with MCP!
+
+### The transformation is complete!
+CodeCraft Studios has gone from chaotic development to a well-oiled machine. The automation system you built handles:
+- **Smart PR descriptions** that help reviewers understand changes
+- **Real-time CI/CD monitoring** that catches failures before they reach production  
+- **Intelligent team notifications** that keep everyone informed automatically
+
+The team can now focus on building great products instead of fighting process problems. And you've learned advanced MCP patterns that you can apply to any automation challenge!
 
 ## Additional Resources
 
