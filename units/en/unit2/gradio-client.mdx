@@ -12,10 +12,41 @@ We'll connect to the MCP server we created in the previous section and use it to
 
 ## MCP Client in Gradio
 
-First, we need to install the `smolagents`, gradio and mcp-client libraries, if we haven't already:
+### Connect to an example MCP Server
+
+Let's connect to an example MCP Server that is already running on Hugging Face. We'll use [this one](https://huggingface.co/spaces/abidlabs/mcp-tools2) for this example. It's a space that contains a collection of MCP tools.
+
+```python
+from smolagents.mcp_client import MCPClient
+
+with MCPClient(
+    {"url": "https://abidlabs-mcp-tools2.hf.space/gradio_api/mcp/sse"}
+) as tools:
+    # Tools from the remote server are available
+    print("\n".join(f"{t.name}: {t.description}" for t in tools))
+
+```
+
+<details>
+<summary>Output</summary>
+<pre>
+<code>
+prime_factors: Compute the prime factorization of a positive integer.
+generate_cheetah_image: Generate a cheetah image.
+image_orientation: Returns whether image is portrait or landscape.
+sepia: Apply a sepia filter to the input image.
+</code>
+</pre>
+</details>
+
+### Connect to your MCP Server from Gradio
+
+Great, now that you've connected to an example MCP Server, let's connect to your own MCP Server from Gradio.
+
+First, we need to install the `smolagents`, Gradio and mcp-client libraries, if we haven't already:
 
 ```bash
-pip install "smolagents[mcp]" "gradio[mcp]" mcp
+pip install "smolagents[mcp]" "gradio[mcp]" mcp fastmcp
 ```
 
 Now, we can import the necessary libraries and create a simple Gradio interface that uses the MCP Client to connect to the MCP Server.
@@ -24,16 +55,15 @@ Now, we can import the necessary libraries and create a simple Gradio interface 
 ```python
 import gradio as gr
 
-from mcp.client.stdio import StdioServerParameters
-from smolagents import InferenceClientModel, CodeAgent, ToolCollection
-from smolagents.mcp_client import MCPClient
+from mcp import StdioServerParameters
+from smolagents import InferenceClientModel, CodeAgent, ToolCollection, MCPClient
 ```
 
 Next, we'll connect to the MCP Server and get the tools that we can use to answer questions.
 
 ```python
 mcp_client = MCPClient(
-    {"url": "http://localhost:7860/gradio_api/mcp/sse"}
+    {"url": "http://localhost:7860/gradio_api/mcp/sse"} # This is the MCP Server we created in the previous section
 )
 tools = mcp_client.get_tools()
 ```
@@ -77,16 +107,13 @@ Here's the complete example of the MCP Client in Gradio:
 ```python
 import gradio as gr
 
-from mcp.client.stdio import StdioServerParameters
-from smolagents import InferenceClientModel, CodeAgent, ToolCollection
-from smolagents.mcp_client import MCPClient
+from mcp import StdioServerParameters
+from smolagents import InferenceClientModel, CodeAgent, ToolCollection, MCPClient
 
 
 try:
     mcp_client = MCPClient(
-        ## Try this working example on the hub:
-        # {"url": "https://abidlabs-mcp-tools.hf.space/gradio_api/mcp/sse"}
-        {"url": "http://localhost:7860/gradio_api/mcp/sse"}
+        {"url": "http://localhost:7860/gradio_api/mcp/sse"} # This is the MCP Server we created in the previous section
     )
     tools = mcp_client.get_tools()
 
@@ -119,13 +146,21 @@ To deploy your Gradio MCP client to Hugging Face Spaces:
    - Choose "Gradio" as the SDK
    - Name your space (e.g., "mcp-client")
 
-2. Create a `requirements.txt` file:
+2. Update MCP Server URL in the code:
+
+```python
+mcp_client = MCPClient(
+    {"url": "http://localhost:7860/gradio_api/mcp/sse"} # This is the MCP Server we created in the previous section
+)
+```
+
+3. Create a `requirements.txt` file:
 ```txt
 gradio[mcp]
 smolagents[mcp]
 ```
 
-3. Push your code to the Space:
+4. Push your code to the Space:
 ```bash
 git init
 git add server.py requirements.txt
