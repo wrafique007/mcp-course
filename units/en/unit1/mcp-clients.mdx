@@ -114,6 +114,14 @@ Environment variables can be passed to server processes using the `env` field. H
 <hfoptions id="env-variables">
 <hfoption id="python">
 
+Let's first install the packages we need to run the examples.
+
+```bash
+pip install "mcp[cli]" "smolagents[mcp]" "fastmcp[cli]"
+# or if you are using uv
+uv add "mcp[cli]" "smolagents[mcp]" "fastmcp[cli]"
+```
+
 In Python, we use the `os` module to access environment variables:
 
 ```python
