@@ -90,7 +90,7 @@ For local servers using stdio transport, the configuration includes the command 
       "transport": {
         "type": "stdio",
         "command": "python",
-        "args": ["/path/to/file_explorer_server.py"]
+        "args": ["/path/to/file_explorer_server.py"] // This is an example, we'll use a real server in the next unit
       }
     }
   ]
@@ -237,25 +237,31 @@ Tiny Agent can run MCP servers with a command line environment. To do this, we w
 
 Let's install `npx` with `npm`. If you don't have `npm` installed, check out the [npm documentation](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
 
+### Setup
+
+First, we will need to install `npx` if you don't have it installed. You can do this with the following command:
+
 ```bash
 # install npx
 npm install -g npx
 ```
 
-<hfoptions id="language">
-<hfoption id="python">
-
-First, install the tiny agents package:
+Then, we will need to install the huggingface_hub package with the MCP support. This will allow us to run MCP servers and clients.
 
 ```bash
 pip install "huggingface_hub[mcp]>=0.32.0"
 ```
 
-First, let's login to the Hugging Face Hub. You will need a [login token](https://huggingface.co/docs/huggingface_hub/v0.32.3/en/quick-start#authentication) to do this.
+Then, we will need to log in to the Hugging Face Hub to access the MCP servers. You can do this with the `huggingface-cli` command line tool. You will need a [login token](https://huggingface.co/docs/huggingface_hub/v0.32.3/en/quick-start#authentication) to do this.
 
 ```bash
 huggingface-cli login
 ```
+
+<hfoptions id="language">
+<hfoption id="python">
+
+### Connecting to MCP Servers
 
 Now, let's create an agent configuration file `agent.json`.
 
@@ -290,6 +296,8 @@ First, install the tiny agents package with [npm](https://docs.npmjs.com/downloa
 ```bash
 npm install @huggingface/tiny-agents
 ```
+
+### Connecting to MCP Servers
 
 Make an agent project directory and create an `agent.json` file.
 
