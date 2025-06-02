@@ -38,7 +38,11 @@ We'll build a tagging agent that consists of four main components: the MCP serve
 
 ![PR Agent Architecture](https://huggingface.co/datasets/mcp-course/images/resolve/main/unit3/architecture.png)
 
+In the diagram above, we have a MCP server that can read and update model tags. We have a webhook listener that can receive webhooks from the Hugging Face Hub. We have an agent that can analyze discussions and comments and create PRs to update model tags. We have a deployment infrastructure that can deploy the MCP server to Hugging Face Spaces.
+
 ### Project Overview
+
+  To build this application we will need the following files:
 
 | File | Purpose | Description |
 |------|---------|-------------|
@@ -49,6 +53,8 @@ We'll build a tagging agent that consists of four main components: the MCP serve
 | `Dockerfile` | **Deployment** | Container configuration for Hugging Face Spaces |
 | `env.example` | **Configuration Template** | Required environment variables and secrets |
 | `cleanup.py` | **Utility** | Helper script for development and testing cleanup |
+
+Let's go through each of these files and understand their purpose.
 
 ### MCP Server (`mcp_server.py`)
 
