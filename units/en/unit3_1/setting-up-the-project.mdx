@@ -24,9 +24,9 @@ hf-pr-agent/
 ├── mcp_server.py              # Core MCP server with tagging tools
 ├── app.py                     # FastAPI webhook listener and agent
 ├── requirements.txt           # Python dependencies
-├── pyproject.toml            # Project configuration
-├── env.example              # Environment variables template
-├── cleanup.py               # Development utility
+├── pyproject.toml             # Project configuration
+├── env.example                # Environment variables template
+├── cleanup.py                 # Development utility
 ```
 
 ## Dependencies and Configuration
@@ -35,7 +35,13 @@ Let's walk through the dependencies and configuration for our project.
 
 ### 1. Python Project Configuration
 
-Create the `pyproject.toml` file to define our project:
+We will use `uv` to create the `pyproject.toml` file to define our project:
+
+<Tip>
+
+If you don't have `uv` installed, you can follow the instructions [here](https://docs.astral.sh/uv/getting-started/installation/).
+
+</Tip>
 
 ```toml
 [project]
@@ -70,6 +76,7 @@ To create a virtual environment, run:
 
 ```bash
 uv venv
+source .venv/bin/activate # or .venv/Scripts/activate on Windows
 ```
 
 To install the dependencies, run:
