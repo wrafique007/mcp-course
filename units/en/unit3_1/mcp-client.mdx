@@ -4,6 +4,12 @@ Now that we have our MCP server with tagging tools, we need to create a client t
 
 For the sake of this project, we'll build both an API and a Gradio app. The API will be used to test the MCP server and the webhook listener, and the Gradio app will be used to test the MCP client with simulated webhook events.
 
+<Tip>
+
+For educational purposes, we will build the MCP Server and MCP Client in the same repo. In a real-world application, you would likely have a separate repo for the MCP Server and MCP Client. In fact, you might only build one of these components.
+
+</Tip>
+
 ## Understanding the MCP Client Architecture
 
 In our application, the MCP client is integrated into the main FastAPI application (`app.py`). It creates and manages connections to our MCP server, providing a seamless interface for tool execution.
