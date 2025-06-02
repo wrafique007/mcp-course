@@ -17,44 +17,37 @@ Some MCP Clients, notably Claude Desktop, do not yet support SSE-based MCP Serve
 
 </Tip>
 
-<hfoptions id="tiny-agents">
-<hfoption id="typescript">
+Tiny Agent can run MCP servers with a command line environment. To do this, we will need to install `npm` and run the server with `npx`. **We'll need these for both Python and JavaScript.**
 
-First, we need to install the `tiny-agents` package.
+Let's install `npx` with `npm`. If you don't have `npm` installed, check out the [npm documentation](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
 
 ```bash
-npm install @huggingface/tiny-agents
-# or
-pnpm add @huggingface/tiny-agents
+# install npx
+npm install -g npx
 ```
 
 Then, we need to install the `mcp-remote` package.
 
 ```bash
 npm i mcp-remote
-# or
-pnpm add mcp-remote
+```
+
+<hfoptions id="tiny-agents">
+<hfoption id="typescript">
+
+For JavaScript, we need to install the `tiny-agents` package.
+
+```bash
+npm install @huggingface/tiny-agents
 ```
 
 </hfoption>
 <hfoption id="python">
 
-First, you need to install the latest version of `huggingface_hub` with the `mcp` extra to get all the necessary components.
+For Python, you need to install the latest version of `huggingface_hub` with the `mcp` extra to get all the necessary components.
 
 ```bash
 pip install "huggingface_hub[mcp]>=0.32.0"
-```
-
-Then, we need to install the `mcp-remote` package.
-
-```bash
-npm install mcp-remote
-```
-
-And we'll need to install `npx` to run the `mcp-remote` command.
-
-```bash
-npm install -g npx
 ```
 
 </hfoption>
@@ -62,7 +55,7 @@ npm install -g npx
 
 ## Tiny Agents MCP Client in the Command Line
 
-Tiny Agents can create MCP clients from the command line based on JSON configuration files.
+Let's repeat the example from [Unit 1](../unit1/mcp-clients.mdx) to create a basic Tiny Agent. Tiny Agents can create MCP clients from the command line based on JSON configuration files.
 
 <hfoptions id="tiny-agents">
 <hfoption id="typescript">
@@ -87,7 +80,7 @@ The JSON file will look like this:
 				"command": "npx",
 				"args": [
 					"mcp-remote",
-					"http://localhost:7860/gradio_api/mcp/sse"
+					"http://localhost:7860/gradio_api/mcp/sse" // This is the MCP Server we created in the previous section
 				]
 			}
 		}
@@ -109,6 +102,7 @@ Let's setup a project with a basic Tiny Agent.
 ```bash
 mkdir my-agent
 touch my-agent/agent.json
+cd my-agent
 ```
 
 The JSON file will look like this:
@@ -135,7 +129,7 @@ The JSON file will look like this:
 We can then run the agent with the following command:
 
 ```bash
-tiny-agents run ./my-agent
+tiny-agents run agent.json
 ```
 
 </hfoption>
@@ -149,10 +143,9 @@ Here we have a basic Tiny Agent that can connect to our Gradio MCP server. It in
 | `provider` | The inference provider to use for the agent |
 | `servers` | The servers to use for the agent. We'll use the `mcp-remote` server for our Gradio MCP server. |
 
-We could also use an open source model running locally with Tiny Agents.
+<Tip>
 
-<hfoptions id="tiny-agents">
-<hfoption id="typescript">
+We could also use an open source model running locally with Tiny Agents. If we start a local inference server with 
 
 ```json
 {
@@ -173,32 +166,10 @@ We could also use an open source model running locally with Tiny Agents.
 }
 ```
 
-</hfoption>
-<hfoption id="python">
-
-```json
-{
-	"model": "Qwen/Qwen3-32B",
-	"endpoint_url": "http://localhost:1234/v1",
-	"servers": [
-		{
-			"type": "stdio",
-			"config": {
-				"command": "npx",
-				"args": [
-					"mcp-remote",
-					"http://localhost:1234/v1/mcp/sse"
-				]
-			}
-		}
-	]
-}
-```
-
-</hfoption>
-</hfoptions>
 
 Here we have a Tiny Agent that can connect to a local model. It includes a model, endpoint URL (`http://localhost:1234/v1`), and a server configuration. The endpoint should be an OpenAI-compatible endpoint.
+
+</Tip>
 
 ## Custom Tiny Agents MCP Client
 
