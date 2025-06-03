@@ -1,5 +1,7 @@
 # The Model Context Protocol (MCP) Course
 
+<div align="center"> <a href="README.md">🇺🇸 English</a> | <a href="README_vi.md">🇻🇳 Tiếng Việt</a> </div>
+
 ![1](https://github.com/user-attachments/assets/d26dcc5e-46cb-449e-aecb-49ece10d342a)
 
 If you like the course, **don't hesitate to ⭐ star this repository**. This helps us to **make the course more visible 🤗**.
@@ -46,10 +48,10 @@ To cite this repository in publications:
 
 ```
 @misc{mcp-course,
-  author = {Your Name},
+  author = Burtenshaw, Ben,
   title = {The Model Context Protocol Course},
   year = {2025},
-  howpublished = {\url{https://github.com/yourusername/mcp-course}},
+  howpublished = {\url{https://github.com/huggingface/mcp-course}},
   note = {GitHub repository},
 }
 ```
