@@ -42,6 +42,11 @@ async def analyze_file_changes(base_branch: str = "main", include_diff: bool = T
         include_diff: Include the full diff content (default: true)
     """
     # TODO: Implement this tool
+    # IMPORTANT: MCP tools have a 25,000 token response limit!
+    # Large diffs can easily exceed this. Consider:
+    # - Adding a max_diff_lines parameter (e.g., 500 lines)
+    # - Truncating large outputs with a message
+    # - Returning summary statistics alongside limited diffs
     return json.dumps({"error": "Not implemented yet", "hint": "Use subprocess to run git commands"})
 
 
