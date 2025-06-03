@@ -49,9 +49,13 @@
     title: Setting up the Project
   - local: unit3_1/creating-the-mcp-server
     title: Creating the MCP Server
+  - local: unit3_1/quiz1
+    title: Quiz 1 - MCP Server Implementation
   - local: unit3_1/mcp-client
     title: MCP Client
   - local: unit3_1/webhook-listener
     title: Webhook Listener
+  - local: unit3_1/quiz2
+    title: Quiz 2 - Pull Request Agent Integration
   - local: unit3_1/conclusion
     title: Conclusion
