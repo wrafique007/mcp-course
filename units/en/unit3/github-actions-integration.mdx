@@ -62,7 +62,9 @@ Your MCP server will run two services:
 This allows Claude to react to real-time CI/CD events!
 
 <Tip>
+
 **Architecture Insight**: Running separate services for MCP communication and webhook handling is a clean separation of concerns. The webhook server handles HTTP complexity while your MCP server focuses on data analysis and Claude integration.
+
 </Tip>
 
 ## Project Structure
@@ -119,7 +121,9 @@ EVENTS_FILE = Path(__file__).parent / "github_events.json"
 The webhook server handles all the HTTP details - you just need to read the JSON file! This separation of concerns keeps your MCP server focused on what it does best.
 
 <Tip>
+
 **Development Tip**: Working with files instead of HTTP requests makes testing much easier. You can manually add events to `github_events.json` to test your tools without setting up webhooks.
+
 </Tip>
 
 ### Step 3: Add GitHub Actions Tools
