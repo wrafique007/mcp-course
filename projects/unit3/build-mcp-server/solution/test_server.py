@@ -71,6 +71,40 @@ class TestAnalyzeFileChanges:
             else:
                 # Starter code - just verify it returns something structured
                 assert isinstance(data, dict), "Should return a JSON object even if not implemented"
+    
+    @pytest.mark.asyncio
+    async def test_output_limiting(self):
+        """Test that large diffs are properly truncated."""
+        with patch('subprocess.run') as mock_run:
+            # Create a mock diff with many lines
+            large_diff = "\n".join([f"+ line {i}" for i in range(1000)])
+            
+            # Set up mock responses
+            mock_run.side_effect = [
+                MagicMock(stdout="M\tfile1.py\n", stderr=""),  # files changed
+                MagicMock(stdout="1 file changed, 1000 insertions(+)", stderr=""),  # stats
+                MagicMock(stdout=large_diff, stderr=""),  # diff
+                MagicMock(stdout="abc123 Initial commit", stderr="")  # commits
+            ]
+            
+            # Test with default limit (500 lines)
+            result = await analyze_file_changes(include_diff=True)
+            data = json.loads(result)
+            
+            # Check if it's implemented
+            if "error" not in data or "Not implemented" not in str(data.get("error", "")):
+                if "diff" in data and data["diff"] != "Diff not included (set include_diff=true to see full diff)":
+                    diff_lines = data["diff"].split('\n')
+                    # Should be truncated to around 500 lines plus truncation message
+                    assert len(diff_lines) < 600, "Large diffs should be truncated"
+                    
+                    # Check for truncation indicator
+                    if "truncated" in data:
+                        assert data["truncated"] == True, "Should indicate truncation"
+                    
+                    # Should have truncation message
+                    assert "truncated" in data["diff"].lower() or "..." in data["diff"], \
+                        "Should indicate diff was truncated"
 
 
 @pytest.mark.skipif(not IMPORTS_SUCCESSFUL, reason="Imports failed")
