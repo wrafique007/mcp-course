@@ -88,6 +88,7 @@ This is your first hands-on MCP development experience! Open `server.py` and imp
    - ⚠️ **Important**: You'll likely hit a token limit error (25,000 tokens max per response)
    - This is a real-world constraint that teaches proper output management
    - See the "Handling Large Outputs" section below for the solution
+   - ⚠️ **Note**: Git commands will run in the MCP server's directory by default. See "Working Directory Considerations" below for details
 2. **Implement `get_pr_templates`** to manage and return PR templates  
 3. **Implement `suggest_template`** to map change types to templates
 
@@ -254,6 +255,35 @@ async def analyze_file_changes(base_branch: str = "main",
 4. **Use progressive disclosure**: Start with high-level info, allow drilling down
 5. **Set sensible defaults**: Default to reasonable limits that work for most cases
 
+## Working Directory Considerations
+
+By default, MCP servers run commands in their installation directory, not in Claude's current working directory. This means your git commands might analyze the wrong repository! 
+
+To solve this, MCP provides [roots](https://modelcontextprotocol.io/docs/concepts/roots) - a way for clients to inform servers about relevant directories. Claude Code automatically provides its working directory as a root.
+
+Here's how to access it in your tool:
+
+```python
+@mcp.tool()
+async def analyze_file_changes(...):
+    # Get Claude's working directory from roots
+    context = mcp.get_context()
+    roots_result = await context.session.list_roots()
+    
+    # Extract the path from the FileUrl object
+    working_dir = roots_result.roots[0].uri.path
+    
+    # Use it for all git commands
+    result = subprocess.run(
+        ["git", "diff", "--name-status"],
+        capture_output=True,
+        text=True,
+        cwd=working_dir  # Run in Claude's directory!
+    )
+```
+
+This ensures your tools operate on the repository Claude is actually working with, not the MCP server's installation location.
+
 ## Troubleshooting
 
 - **Import errors**: Ensure you've run `uv sync`
@@ -262,6 +292,17 @@ async def analyze_file_changes(base_branch: str = "main",
 - **JSON errors**: All tools must return valid JSON strings
 - **Token limit exceeded**: This is expected with large diffs! Implement output limiting as shown above
 - **"Response too large" errors**: Add `max_diff_lines` parameter or set `include_diff=false`
+- **Git commands run in wrong directory**: MCP servers run in their installation directory by default, not Claude's working directory. To fix this, use [MCP roots](https://modelcontextprotocol.io/docs/concepts/roots) to access Claude's current directory:
+  ```python
+  # Get Claude's working directory from roots
+  context = mcp.get_context()
+  roots_result = await context.session.list_roots()
+  working_dir = roots_result.roots[0].uri.path  # FileUrl object has .path property
+  
+  # Use it in subprocess calls
+  subprocess.run(["git", "diff"], cwd=working_dir)
+  ```
+  Claude Code automatically provides its working directory as a root, allowing your MCP server to operate in the correct location.
 
 ## Next Steps
 
