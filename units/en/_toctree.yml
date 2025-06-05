@@ -25,6 +25,8 @@
     title: MCP Clients
   - local: unit1/gradio-mcp
     title: Gradio MCP Integration
+  - local: unit1/unit1-recap
+    title: Unit 1 Recap
   - local: unit1/certificate
     title: Get your certificate!
 
@@ -39,7 +41,7 @@
   - local: unit2/gradio-client
     title: Building an MCP Client with Gradio
   - local: unit2/tiny-agents
-    title: Building a Tiny Agent with TypeScript
+    title: Building Tiny Agents with MCP and the Hugging Face Hub
 
 - title: "3.1. Use Case: Build a Pull Request Agent on the Hub"
   sections:
