@@ -53,6 +53,10 @@
     title: "Module 2: GitHub Actions Integration"
   - local: unit3/slack-notification
     title: "Module 3: Slack Notification"
+  - local: unit3/build-mcp-server-solution-walkthrough
+    title: "Unit 3 Solution Walkthrough: Building a Pull Request Agent with MCP"
+  - local: unit3/certificate
+    title: "Get your certificate!"
   - local: unit3/conclusion
     title: "Unit 3 Conclusion"
 
