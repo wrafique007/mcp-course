@@ -18,13 +18,32 @@ The team realizes they need real-time visibility into their CI/CD pipeline, but 
 
 This module bridges the gap between static file analysis (Module 1) and dynamic team notifications (Module 3). You'll add real-time capabilities that transform your PR Agent into a comprehensive development monitoring system.
 
-## What You'll Build
-
 Building on the foundation you created in Module 1, you'll add:
 - **Webhook server** to receive GitHub Actions events
 - **New tools** for monitoring CI/CD status
 - **MCP Prompts** that provide consistent workflow patterns
 - **Real-time integration** with your GitHub repository
+
+### Screencast: Real-Time CI/CD Monitoring in Action! 🎯
+
+<video controls>
+  <source src="https://huggingface.co/datasets/mcp-course/videos/resolve/main/unit3/github-actions-integration-compressed.mp4" type="video/mp4" />
+  Your browser does not support the video tag.
+</video>
+
+**The Setup**: Watch how CodeCraft Studios' new system catches failures before they reach production:
+1. **GitHub Webhooks** - See the actual webhook configuration that sends events to your server
+2. **Failed Tests** - Those red X's that used to go unnoticed? Not anymore!
+3. **Local Development** - The webhook server and Cloudflare tunnel working together
+
+**MCP Magic in Real-Time**: Claude responds to three key requests:
+- **"What GitHub Actions events have we received?"** - Claude uses your new tools to check recent activity
+- **"Analyze CI Results"** - Watch Claude dig into test failures and provide actionable insights
+- **"Create Deployment Summary"** - See how MCP Prompts guide Claude to create team-friendly updates
+
+**The Silent Failures No More** 🚨: Remember that critical bug from Tuesday's failed test? With this system, Claude would have caught it immediately. The screencast shows exactly how your MCP server turns GitHub's raw webhook data into clear, actionable alerts.
+
+**What Makes This Special**: Your Module 1 PR Agent was static—it analyzed code when asked. This Module 2 enhancement is dynamic—it watches your CI/CD pipeline 24/7 and helps Claude provide real-time insights. No more Friday afternoon surprises!
 
 ## Learning Objectives
 
