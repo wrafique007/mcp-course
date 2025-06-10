@@ -22,12 +22,31 @@ The team realizes they have an information silo problem. Everyone's working hard
 
 This final module completes the CodeCraft Studios transformation. You'll integrate Tools and Prompts to create a smart notification system that sends formatted Slack messages about CI/CD events, demonstrating how all MCP primitives work together in a real-world scenario.
 
-## What You'll Build
-
 Building on the foundation from Modules 1 and 2, you'll add the final piece of the puzzle:
 - **Slack webhook tool** for sending messages to your team channel
 - **Two notification prompts** that intelligently format CI events
 - **Complete integration** showing all MCP primitives working together
+
+### Screencast: The Complete Automation System! 🎉
+
+<Youtube id="sX5qrbDG-oY" />
+
+**The Final Piece**: Watch how your complete automation system prevents those Monday morning surprises that plagued Emma and Jake!
+
+**What You'll See**: 
+- **Claude's intelligent workflow** - Notice how Claude breaks down the task: ☐ Check events → ☐ Send notification
+- **Real-time MCP tools in action** - `get_recent_actions_events` pulls fresh CI data, then `send_slack_notification` delivers the alert
+- **Side-by-side demonstration** - The Slack channel is open in parallel to show the formatted message appearing as Claude sends it
+
+**The Smart Notification**: Claude doesn't just spam the team—it crafts a professional alert with:
+- 🚨 Clear urgency indicators and emoji
+- **Detailed failure breakdown** (test-auth-service ❌, test-api ❌, test-frontend ⏳)
+- **Actionable links** to the pipeline run and pull request
+- **Context everyone needs** - repository, PR #1 "various improvements", commit hash
+
+**Why This Matters**: Remember the communication gap crisis? No more! This system ensures that when CI fails on `demo-bad-pr` branch, the whole team knows immediately. No more weekend debugging sessions for issues that were already fixed!
+
+**The Complete Journey**: From Module 1's PR chaos to Module 3's intelligent team notifications—you've built a system that transforms how CodeCraft Studios collaborates. The weekend warriors become informed teammates! 🚀
 
 ## Learning Objectives
 
@@ -146,7 +165,7 @@ def send_slack_notification(message: str) -> str:
     
     try:
         # TODO: Send POST request to webhook_url
-        # TODO: Include message in JSON payload
+        # TODO: Include message in JSON payload with "mrkdwn": true
         # TODO: Handle response and return status
         pass
     except Exception as e:
@@ -167,18 +186,15 @@ Implement two prompts that generate Slack-formatted messages:
        return """Format this GitHub Actions failure as a Slack message:
 
    Use this template:
-   ❌ *CI Failed* - [Repository Name]
+   :rotating_light: *CI Failure Alert* :rotating_light:
    
-   > Brief summary of what failed
+   A CI workflow has failed:
+   *Workflow*: workflow_name
+   *Branch*: branch_name
+   *Status*: Failed
+   *View Details*: <LOGS_LINK|View Logs>
    
-   *Details:*
-   • Workflow: `workflow_name`
-   • Branch: `branch_name`
-   • Commit: `commit_hash`
-   
-   *Next Steps:*
-   • <PR_LINK|View Pull Request>
-   • <LOGS_LINK|Check Action Logs>
+   Please check the logs and address any issues.
    
    Use Slack markdown formatting and keep it concise for quick team scanning."""
    ```
@@ -191,17 +207,16 @@ Implement two prompts that generate Slack-formatted messages:
        return """Format this successful GitHub Actions run as a Slack message:
 
    Use this template:
-   ✅ *Deployment Successful* - [Repository Name]
+   :white_check_mark: *Deployment Successful* :white_check_mark:
    
-   > Brief summary of what was deployed
+   Deployment completed successfully for [Repository Name]
    
    *Changes:*
-   • Key feature or fix 1
-   • Key feature or fix 2
+   - Key feature or fix 1
+   - Key feature or fix 2
    
    *Links:*
-   • <PR_LINK|View Changes>
-   • <DEPLOY_LINK|Visit Site>
+   <PR_LINK|View Changes>
    
    Keep it celebratory but informative. Use Slack markdown formatting."""
    ```
@@ -265,33 +280,29 @@ Claude:
 
 **Failure Alert:**
 ```
-❌ *CI Failed* - mcp-course
+🚨 *CI Failure Alert* 🚨
 
-> Tests failed in Module 3 implementation
+A CI workflow has failed:
+*Workflow*: CI (Run #42)
+*Branch*: feature/slack-integration
+*Status*: Failed
+*View Details*: <https://github.com/user/mcp-course/actions/runs/123|View Logs>
 
-*Details:*
-• Workflow: `CI`
-• Branch: `feature/slack-integration`
-• Commit: `abc123f`
-
-*Next Steps:*
-• <https://github.com/user/mcp-course/pull/42|View Pull Request>
-• <https://github.com/user/mcp-course/actions/runs/123|Check Action Logs>
+Please check the logs and address any issues.
 ```
 
 **Success Summary:**
 ```
-✅ *Deployment Successful* - mcp-course
+✅ *Deployment Successful* ✅
 
-> Module 3 Slack integration deployed to staging
+Deployment completed successfully for mcp-course
 
 *Changes:*
-• Added team notification system
-• Integrated MCP Tools and Prompts
+- Added team notification system
+- Integrated MCP Tools and Prompts
 
 *Links:*
-• <https://github.com/user/mcp-course/pull/42|View Changes>
-• <https://staging.example.com|Visit Site>
+<https://github.com/user/mcp-course/pull/42|View Changes>
 ```
 
 ## Common Issues
@@ -303,6 +314,8 @@ Claude:
 
 ### Message Formatting
 - [Slack markdown](https://api.slack.com/reference/surfaces/formatting) differs from GitHub markdown
+- **Important**: Use `*text*` for bold (not `**text**`)
+- Include `"mrkdwn": true` in webhook payload for proper formatting
 - Test message formatting manually before automating
 - Handle special characters in commit messages properly ([formatting reference](https://api.slack.com/reference/surfaces/formatting#escaping))
 

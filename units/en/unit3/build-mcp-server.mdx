@@ -15,9 +15,42 @@ The team knows they need better PR descriptions, but everyone's too busy shippin
 
 **Your mission**: Build an intelligent PR Agent that analyzes code changes and suggests helpful descriptions automatically.
 
+### Screencast: The PR Problem in Action 😬
+
+<Youtube id="tskAUPWFPP0" />
+
+**What You'll See**: A real PR at CodeCraft Studios titled "various improvements" and the description simply says "Fixed some stuff and made updates". Classic, right?
+
+**The Confusion**: Watch as teammates struggle:
+- **Sarah** (3 hours ago): "What was fixed? I see changes to the User model but can't tell if this is addressing a bug or adding features"
+- **Jamie** (3 hours ago): "There are 8 files across 4 services... are these changes related? What should I focus on during review?"
+
+**The Pain Point**: The screencast shows the actual diff—8 files scattered across multiple services with zero context. Reviewers have to piece together the story themselves, wasting precious time and possibly missing critical issues.
+
+**Why This Matters**: This is exactly the PR chaos your MCP server will solve! By the end of this module, you'll turn these cryptic PRs into clear, actionable descriptions that make everyone's life easier.
+
 ## What You'll Build
 
 In this first module, you'll create the foundation of CodeCraft Studios' automation system: an MCP server that transforms how the team writes pull requests. This module focuses on core MCP concepts that you'll build upon in Modules 2 and 3.
+
+### Screencast: Your PR Agent Saves the Day! 🚀
+
+<Youtube id="OaAWJLvnlqc" />
+
+**The Solution in Action**: Watch how your MCP server will transform PR chaos into clarity:
+1. **`analyze_file_changes`** - Grabs all the changes (453 lines across 8 files!)
+2. **`get_pr_templates`** - Shows Claude the 7 templates to choose from
+3. **`suggest_template`** - Claude picks "Feature" (smart choice!)
+
+**What You'll See**: Claude doesn't just pick a template—it:
+- Writes a clear summary of what actually changed
+- Spots security issues (yikes, unhashed passwords!)
+- Creates a nice to-do list for follow-up work
+- Even prioritizes what needs fixing first
+
+**The "Wow" Moment** ✨: In just seconds, your MCP server helps Claude transform the same branch into a PR that actually explains what's going on. No more confused reviewers, no more "what does this do?" comments.
+
+**This is what you'll build**: A tool that turns PR dread into PR delight—let's get started!
 
 ## What You Will Learn
 
