@@ -1,0 +1,134 @@
+# Using MCP with Local and Open Source Models
+
+In this section, we'll connect MCP with local and open-source models using
+Continue, a tool for building AI coding assistants that works with local tools
+like Ollama.
+
+## Setup Continue
+
+You can install Continue from the VS Code marketplace.
+
+*Note: Continue also has an extension for JetBrains.*
+
+### VS Code extension
+
+1. Click `Install` on the [Continue extension page in the Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=Continue.continue)
+2. This will open the Continue extension page in VS Code, where you will need to click `Install` again
+3. The Continue logo will appear on the left sidebar. For a better experience, move Continue to the right sidebar
+
+![](https://images.type.ai/img_9FWEqi6ArNvSvOLbCB.gif)
+
+With Continue configured, we'll move on to setting up Ollama to pull local models.
+
+### Ollama local models
+
+Ollama is an open-source tool that allows users to run large language models (LLMs)
+locally on their own computers. To use Ollama, you can [install](https://ollama.com/download) it and
+download the model you want to run with the `ollama run` command.
+
+For example, you can download the [llama 3.1:8b](https://ollama.com/models/llama-3:1b) model with:
+
+```bash
+ollama pull llama3.1:8b
+```
+
+It is important that we use models that have tool calling as a built-in feature, such as Codestral and Llama 3.1x.
+
+1. Create a folder called `.continue/models` at the top level of your workspace
+2. Add a file called `llama-max.yaml` to this folder
+3. Write the following contents to `llama-max.yaml` and save
+
+```yaml
+name: Ollama Llama model
+version: 0.0.1
+schema: v1
+models:
+  - provider: ollama
+    model: llama3.1:8b
+    defaultCompletionOptions:
+      contextLength: 50000
+    name: a llama3.1:8b max
+    roles:
+      - chat
+      - edit
+```
+
+By default, the max context length is `8192`. This setup includes a larger use of
+that context window to perform multiple MCP requests and also allows for more
+tokens to be used.
+
+## How it works
+
+### The tool handshake
+
+Tools provide a powerful way for models to interface with the external world.
+They are provided to the model as a JSON object with a name and an arguments
+schema. For example, a `read_file` tool with a `filepath` argument will give the
+model the ability to request the contents of a specific file.
+
+The following handshake describes how the Agent uses tools:
+
+1. In Agent mode, available tools are sent along with `user` chat requests
+2. The model can choose to include a tool call in its response
+3. The user gives permission. This step is skipped if the policy for that tool is set to `Automatic`
+4. Continue calls the tool using built-in functionality or the MCP server that offers that particular tool
+5. Continue sends the result back to the model
+6. The model responds, potentially with another tool call, and step 2 begins again
+
+Continue supports multiple local model providers. You can use different models
+for different tasks or switch models as needed. This section focuses on
+local-first solutions, but Continue does work with popular providers
+like OpenAI, Anthropic, Microsoft/Azure, Mistral, and more. You can also run
+your own model provider.
+
+### Local Model Integration with MCP
+
+Now that we have everything set up, let's add an existing MCP server. Below is a quick example of setting up a new MCP server for use in your assistant:
+
+1. Create a folder called `.continue/mcpServers` at the top level of your workspace
+2. Add a file called `playwright-mcp.yaml` to this folder
+3. Write the following contents to `playwright-mcp.yaml` and save
+
+```yaml
+name: Playwright mcpServer
+version: 0.0.1
+schema: v1
+mcpServers:
+  - name: Browser search
+    command: npx
+    args:
+      - "@playwright/mcp@latest"
+```
+
+Now test your MCP server by prompting the following command:
+
+```
+1. Using playwright, navigate to https://news.ycombinator.com.
+
+2. Extract the titles and URLs of the top 4 posts on the homepage.
+
+3. Create a file named hn.txt in the root directory of the project.&nbsp;
+
+4. Save this list as plain text in the hn.txt file, with each line containing the title and URL separated by a hyphen.
+
+Do not output code or instructions—just complete the task and confirm when it is done.
+```
+
+The result will be a generated file called `hn.txt` in the current working directory.
+
+![](https://images.type.ai/img_o3z9i3HnFJNfCm9bgu.png)
+
+## Conclusion
+
+##
+
+By combining Continue with local models like Llama 3.1 and MCP servers, you've
+unlocked a powerful development workflow that keeps your code and data private
+while leveraging cutting-edge AI capabilities. 
+
+This setup gives you the flexibility to customize your AI assistant with
+specialized tools, from web automation to file management, all running entirely
+on your local machine. Ready to take your development workflow to the next
+level? Start by experimenting with different MCP servers from the [Continue Hub
+MCP explore page](https://hub.continue.dev/explore/mcp) and discover how
+local AI can transform your coding experience.
