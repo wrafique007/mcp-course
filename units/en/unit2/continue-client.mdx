@@ -8,7 +8,9 @@ like Ollama.
 
 You can install Continue from the VS Code marketplace.
 
-*Note: Continue also has an extension for JetBrains.*
+<Tip>
+*Continue also has an extension for JetBrains.*
+</Tip>
 
 ### VS Code extension
 
@@ -16,7 +18,7 @@ You can install Continue from the VS Code marketplace.
 2. This will open the Continue extension page in VS Code, where you will need to click `Install` again
 3. The Continue logo will appear on the left sidebar. For a better experience, move Continue to the right sidebar
 
-![](https://images.type.ai/img_9FWEqi6ArNvSvOLbCB.gif)
+![sidebar vs code demo](https://docs.continue.dev/assets/images/move-to-right-sidebar-b2d315296198e41046fc174d8178f30a.gif)
 
 With Continue configured, we'll move on to setting up Ollama to pull local models.
 
@@ -32,7 +34,7 @@ For example, you can download the [llama 3.1:8b](https://ollama.com/models/llama
 ollama pull llama3.1:8b
 ```
 
-It is important that we use models that have tool calling as a built-in feature, such as Codestral and Llama 3.1x.
+It is important that we use models that have tool calling as a built-in feature, i.e. Codestral Qwen and Llama 3.1x.
 
 1. Create a folder called `.continue/models` at the top level of your workspace
 2. Add a file called `llama-max.yaml` to this folder
@@ -53,9 +55,9 @@ models:
       - edit
 ```
 
-By default, the max context length is `8192`. This setup includes a larger use of
-that context window to perform multiple MCP requests and also allows for more
-tokens to be used.
+By default, the max context length is `8192` tokens. This setup includes a larger use of
+that context window to perform multiple MCP requests and also allotment for more
+tokens will be necessary.
 
 ## How it works
 
@@ -107,7 +109,7 @@ Now test your MCP server by prompting the following command:
 
 2. Extract the titles and URLs of the top 4 posts on the homepage.
 
-3. Create a file named hn.txt in the root directory of the project.&nbsp;
+3. Create a file named hn.txt in the root directory of the project.
 
 4. Save this list as plain text in the hn.txt file, with each line containing the title and URL separated by a hyphen.
 
@@ -116,11 +118,9 @@ Do not output code or instructions—just complete the task and confirm when it 
 
 The result will be a generated file called `hn.txt` in the current working directory.
 
-![](https://images.type.ai/img_o3z9i3HnFJNfCm9bgu.png)
+![mcp output example](https://deploy-preview-6060--continuedev.netlify.app/assets/images/mcp-playwright-50b192a2ff395f7a6cc11618c5e2d5b1.png)
 
 ## Conclusion
-
-##
 
 By combining Continue with local models like Llama 3.1 and MCP servers, you've
 unlocked a powerful development workflow that keeps your code and data private
