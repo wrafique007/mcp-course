@@ -31,10 +31,11 @@ pip install "gradio[mcp]" textblob
 Create a new file called `app.py` with the following code:
 
 ```python
+import json
 import gradio as gr
 from textblob import TextBlob
 
-def sentiment_analysis(text: str) -> dict:
+def sentiment_analysis(text: str) -> str:
     """
     Analyze the sentiment of the given text.
 
@@ -42,22 +43,24 @@ def sentiment_analysis(text: str) -> dict:
         text (str): The text to analyze
 
     Returns:
-        dict: A dictionary containing polarity, subjectivity, and assessment
+        str: A JSON string containing polarity, subjectivity, and assessment
     """
     blob = TextBlob(text)
     sentiment = blob.sentiment
     
-    return {
+    result = {
         "polarity": round(sentiment.polarity, 2),  # -1 (negative) to 1 (positive)
         "subjectivity": round(sentiment.subjectivity, 2),  # 0 (objective) to 1 (subjective)
         "assessment": "positive" if sentiment.polarity > 0 else "negative" if sentiment.polarity < 0 else "neutral"
     }
 
+    return json.dumps(result)
+
 # Create the Gradio interface
 demo = gr.Interface(
     fn=sentiment_analysis,
     inputs=gr.Textbox(placeholder="Enter text to analyze..."),
-    outputs=gr.JSON(),
+    outputs=gr.Textbox(),  # Changed from gr.JSON() to gr.Textbox()
     title="Text Sentiment Analysis",
     description="Analyze the sentiment of text using TextBlob"
 )
