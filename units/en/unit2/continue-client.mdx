@@ -20,7 +20,7 @@ You can install Continue from the VS Code marketplace.
 
 ![sidebar vs code demo](https://docs.continue.dev/assets/images/move-to-right-sidebar-b2d315296198e41046fc174d8178f30a.gif)
 
-With Continue configured, we'll move on to setting up Ollama to pull local models.
+With Continue configured, we'll move on to setting up Ollama to pull local models. 
 
 ### Ollama local models
 
@@ -33,6 +33,14 @@ For example, you can download the [llama 3.1:8b](https://ollama.com/models/llama
 ```bash
 ollama pull llama3.1:8b
 ```
+<Tip>
+It is possible
+to use other local model provides, like [Llama.cpp](https://docs.continue.dev/customize/model-providers/more/llamacpp), and [LLmstudio](https://docs.continue.dev/customize/model-providers/more/lmstudio) by updating the
+model provider in the configuration files below. However, Continue has been
+tested with Ollama and it is recommended to use it for the best experience.
+
+Details on all available model providers can be found in the [Continue documentation](https://docs.continue.dev/customize/model-providers).
+</Tip>
 
 It is important that we use models that have tool calling as a built-in feature, i.e. Codestral Qwen and Llama 3.1x.
 
@@ -55,9 +63,8 @@ models:
       - edit
 ```
 
-By default, the max context length is `8192` tokens. This setup includes a larger use of
-that context window to perform multiple MCP requests and also allotment for more
-tokens will be necessary.
+By default, each model has a max context length, in this case it is `128000` tokens. This setup includes a larger use of
+that context window to perform multiple MCP requests and needs to be able to handle more tokens.
 
 ## How it works
 
@@ -67,6 +74,8 @@ Tools provide a powerful way for models to interface with the external world.
 They are provided to the model as a JSON object with a name and an arguments
 schema. For example, a `read_file` tool with a `filepath` argument will give the
 model the ability to request the contents of a specific file.
+
+![autonomous agents diagram](https://gist.github.com/user-attachments/assets/c7301fc0-fa5c-4dc4-9955-7ba8a6587b7a)
 
 The following handshake describes how the Agent uses tools:
 
