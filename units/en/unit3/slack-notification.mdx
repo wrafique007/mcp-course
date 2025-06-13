@@ -131,7 +131,9 @@ slack-notification/
    - Treat it like a password - anyone with this URL can send messages to your channel
 
 <Tip warning={true}>
+
 **Security Alert**: Webhook URLs are sensitive credentials! Anyone with your webhook URL can send messages to your Slack channel. Always store them as environment variables and never commit them to version control.
+
 </Tip>
 
 ### Step 2: Add Slack Tool (15 min)
@@ -139,7 +141,9 @@ slack-notification/
 Now that you have a working webhook, you'll add a new MCP tool to your existing server.py from Module 2. This tool will handle sending notifications to Slack by making HTTP requests to the webhook URL.
 
 <Tip>
+
 **Note**: The starter code includes all improvements from Modules 1 & 2 (output limiting, webhook handling). Focus on the new Slack integration!
+
 </Tip>
 
 Add this tool to your server.py:

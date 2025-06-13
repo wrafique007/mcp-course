@@ -7,7 +7,7 @@ Extend your PR Agent with webhook handling and MCP Prompts for CI/CD workflows.
 import json
 import os
 import subprocess
-from typing import Dict, List, Any, Optional
+from typing import Optional
 from pathlib import Path
 from datetime import datetime
 
@@ -19,8 +19,36 @@ mcp = FastMCP("pr-agent-actions")
 # PR template directory (shared between starter and solution)
 TEMPLATES_DIR = Path(__file__).parent.parent.parent / "templates"
 
+# Default PR templates
+DEFAULT_TEMPLATES = {
+    "bug.md": "Bug Fix",
+    "feature.md": "Feature",
+    "docs.md": "Documentation",
+    "refactor.md": "Refactor",
+    "test.md": "Test",
+    "performance.md": "Performance",
+    "security.md": "Security"
+}
+
 # TODO: Add path to events file where webhook_server.py stores events
 # Hint: EVENTS_FILE = Path(__file__).parent / "github_events.json"
+
+# Type mapping for PR templates
+TYPE_MAPPING = {
+    "bug": "bug.md",
+    "fix": "bug.md",
+    "feature": "feature.md",
+    "enhancement": "feature.md",
+    "docs": "docs.md",
+    "documentation": "docs.md",
+    "refactor": "refactor.md",
+    "cleanup": "refactor.md",
+    "test": "test.md",
+    "testing": "test.md",
+    "performance": "performance.md",
+    "optimization": "performance.md",
+    "security": "security.md"
+}
 
 
 # ===== Module 1 Tools (Already includes output limiting fix from Module 1) =====
@@ -94,38 +122,22 @@ async def analyze_file_changes(
         return json.dumps(analysis, indent=2)
         
     except subprocess.CalledProcessError as e:
-        return f"Error analyzing changes: {e.stderr}"
+        return json.dumps({"error": f"Git error: {e.stderr}"})
     except Exception as e:
-        return f"Error: {str(e)}"
+        return json.dumps({"error": str(e)})
 
 
 @mcp.tool()
 async def get_pr_templates() -> str:
     """List available PR templates with their content."""
-    templates = []
-    
-    # Define default templates
-    default_templates = {
-        "bug.md": "Bug Fix",
-        "feature.md": "Feature",
-        "docs.md": "Documentation",
-        "refactor.md": "Refactor",
-        "test.md": "Test",
-        "performance.md": "Performance",
-        "security.md": "Security"
-    }
-    
-    for filename, template_type in default_templates.items():
-        template_path = TEMPLATES_DIR / filename
-        
-        # Read template content
-        content = template_path.read_text()
-        
-        templates.append({
+    templates = [
+        {
             "filename": filename,
             "type": template_type,
-            "content": content
-        })
+            "content": (TEMPLATES_DIR / filename).read_text()
+        }
+        for filename, template_type in DEFAULT_TEMPLATES.items()
+    ]
     
     return json.dumps(templates, indent=2)
 
@@ -143,25 +155,8 @@ async def suggest_template(changes_summary: str, change_type: str) -> str:
     templates_response = await get_pr_templates()
     templates = json.loads(templates_response)
     
-    # Map change types to template files
-    type_mapping = {
-        "bug": "bug.md",
-        "fix": "bug.md",
-        "feature": "feature.md",
-        "enhancement": "feature.md",
-        "docs": "docs.md",
-        "documentation": "docs.md",
-        "refactor": "refactor.md",
-        "cleanup": "refactor.md",
-        "test": "test.md",
-        "testing": "test.md",
-        "performance": "performance.md",
-        "optimization": "performance.md",
-        "security": "security.md"
-    }
-    
     # Find matching template
-    template_file = type_mapping.get(change_type.lower(), "feature.md")
+    template_file = TYPE_MAPPING.get(change_type.lower(), "feature.md")
     selected_template = next(
         (t for t in templates if t["filename"] == template_file),
         templates[0]  # Default to first template if no match
