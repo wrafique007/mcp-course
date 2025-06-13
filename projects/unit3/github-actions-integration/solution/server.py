@@ -7,7 +7,7 @@ Extends the PR agent with webhook handling and standardized CI/CD workflows usin
 import json
 import os
 import subprocess
-from typing import Dict, Any, Optional
+from typing import Optional
 from pathlib import Path
 
 from mcp.server.fastmcp import FastMCP
@@ -18,8 +18,36 @@ mcp = FastMCP("pr-agent-actions")
 # PR template directory (shared between starter and solution)
 TEMPLATES_DIR = Path(__file__).parent.parent.parent / "templates"
 
+# Default PR templates
+DEFAULT_TEMPLATES = {
+    "bug.md": "Bug Fix",
+    "feature.md": "Feature",
+    "docs.md": "Documentation",
+    "refactor.md": "Refactor",
+    "test.md": "Test",
+    "performance.md": "Performance",
+    "security.md": "Security"
+}
+
 # File where webhook server stores events
 EVENTS_FILE = Path(__file__).parent / "github_events.json"
+
+# Type mapping for PR templates
+TYPE_MAPPING = {
+    "bug": "bug.md",
+    "fix": "bug.md",
+    "feature": "feature.md",
+    "enhancement": "feature.md",
+    "docs": "docs.md",
+    "documentation": "docs.md",
+    "refactor": "refactor.md",
+    "cleanup": "refactor.md",
+    "test": "test.md",
+    "testing": "test.md",
+    "performance": "performance.md",
+    "optimization": "performance.md",
+    "security": "security.md"
+}
 
 
 # ===== Original Tools from Module 1 (with output limiting) =====
@@ -49,7 +77,7 @@ async def analyze_file_changes(
                 root = roots_result.roots[0]
                 # FileUrl object has a .path property that gives us the path directly
                 working_directory = root.uri.path
-            except Exception as e:
+            except Exception:
                 # If we can't get roots, fall back to current directory
                 pass
         
@@ -122,30 +150,14 @@ async def analyze_file_changes(
 @mcp.tool()
 async def get_pr_templates() -> str:
     """List available PR templates with their content."""
-    templates = []
-    
-    # Define default templates
-    default_templates = {
-        "bug.md": "Bug Fix",
-        "feature.md": "Feature",
-        "docs.md": "Documentation",
-        "refactor.md": "Refactor",
-        "test.md": "Test",
-        "performance.md": "Performance",
-        "security.md": "Security"
-    }
-    
-    for filename, template_type in default_templates.items():
-        template_path = TEMPLATES_DIR / filename
-        
-        # Read template content
-        content = template_path.read_text()
-        
-        templates.append({
+    templates = [
+        {
             "filename": filename,
             "type": template_type,
-            "content": content
-        })
+            "content": (TEMPLATES_DIR / filename).read_text()
+        }
+        for filename, template_type in DEFAULT_TEMPLATES.items()
+    ]
     
     return json.dumps(templates, indent=2)
 
@@ -163,25 +175,8 @@ async def suggest_template(changes_summary: str, change_type: str) -> str:
     templates_response = await get_pr_templates()
     templates = json.loads(templates_response)
     
-    # Map change types to template files
-    type_mapping = {
-        "bug": "bug.md",
-        "fix": "bug.md",
-        "feature": "feature.md",
-        "enhancement": "feature.md",
-        "docs": "docs.md",
-        "documentation": "docs.md",
-        "refactor": "refactor.md",
-        "cleanup": "refactor.md",
-        "test": "test.md",
-        "testing": "test.md",
-        "performance": "performance.md",
-        "optimization": "performance.md",
-        "security": "security.md"
-    }
-    
     # Find matching template
-    template_file = type_mapping.get(change_type.lower(), "feature.md")
+    template_file = TYPE_MAPPING.get(change_type.lower(), "feature.md")
     selected_template = next(
         (t for t in templates if t["filename"] == template_file),
         templates[0]  # Default to first template if no match
