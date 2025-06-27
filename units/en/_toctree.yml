@@ -45,7 +45,7 @@
   - local: unit2/tiny-agents
     title: Building Tiny Agents with MCP and the Hugging Face Hub
   - local: unit2/lemonade-server
-    title: Local Agents with AMD NPU and iGPU Acceleration
+    title: Local Tiny Agents with AMD NPU and iGPU Acceleration
 
 - title: "3. Advanced MCP Development: Custom Workflow Servers"
   sections:
