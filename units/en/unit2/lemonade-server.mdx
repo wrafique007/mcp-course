@@ -21,16 +21,22 @@ Once you have installed Lemonade Server, you can launch it by clicking the `Lemo
 </hfoption>
 <hfoption id="linux">
 
-To install Lemonade on Linux, first create and activate a conda environment or venv:
+To install Lemonade on Linux, first create and activate a venv:
+
+<Tip>
+
+If you don't have `uv` installed, you can install it following the instructions [here](https://docs.astral.sh/uv/getting-started/installation/).
+
+</Tip>
 
 ```bash
-conda create -n lemon python=3.10
-conda activate lemon
+uv venv --python 3.11
+source .venv/bin/activate
 ```
 
-Then, install the `lemonade-sdk` package with the `oga-cpu-minimal` extra:
-```
-pip install lemonade-sdk==8.0.2
+Then, install the `lemonade-sdk` package:
+```bash
+uv pip install lemonade-sdk==8.0.2
 ```
 
 Altenatively, you can also install from source by cloning the repository and building the package:
@@ -43,7 +49,7 @@ pip install -e .
 Once installed, you can launch Lemonade by running the following command:
 
 ```bash
-lemonade-server serve
+lemonade-server-dev serve
 ```
 
 Lemonade Server supports CPU inference across all platforms and engines on Windows x86/x64. For GPU acceleration is enabled through llamacpp engine (Vulkan), with a focus on AMD Ryzen™ AI 7000/8000/300 series and Radeon™ 7000/9000 series.
