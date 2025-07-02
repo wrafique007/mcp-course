@@ -64,6 +64,10 @@ This section of the course assumes you have already installed `npx` and `Tiny Ag
 ## Running your Tiny Agents application with AMD NPU and iGPU
 
 To run your Tiny Agents application with AMD NPU and iGPU, simply point to the MCP server we created in the [previous section](https://huggingface.co/learn/mcp-course/en/unit2/tiny-agents) to the Lemonade Server, as shown below:
+
+<hfoptions id="agent-config">
+<hfoption id="windows">
+
 ```json
 {
   "model": "Qwen3-8B-GGUF",
@@ -72,7 +76,7 @@ To run your Tiny Agents application with AMD NPU and iGPU, simply point to the M
     {
       "type": "stdio",
       "config": {
-        "command": "C:\\Program Files\\nodejs\\npx.cmd", // Or simply "npx" on Linux
+        "command": "C:\\Program Files\\nodejs\\npx.cmd",
         "args": [
           "mcp-remote",
           "http://localhost:7860/gradio_api/mcp/sse"
@@ -82,6 +86,31 @@ To run your Tiny Agents application with AMD NPU and iGPU, simply point to the M
   ]
 }
 ```
+
+</hfoption>
+<hfoption id="linux">
+
+```json
+{
+  "model": "Qwen3-8B-GGUF",
+  "endpointUrl": "http://localhost:8000/api/",
+  "servers": [
+    {
+      "type": "stdio",
+      "config": {
+        "command": "npx",
+        "args": [
+          "mcp-remote",
+          "http://localhost:7860/gradio_api/mcp/sse"
+        ]
+      }
+    }
+  ]
+}
+```
+
+</hfoption>
+</hfoptions>
 
 You can then choose from a variety of models to run on your local machine. For this example, used the [`Qwen3-8B-GGUF`](https://huggingface.co/Qwen/Qwen3-8B-GGUF) model, which runs efficiently on AMD GPUs through Vulkan acceleration. You can find the list of models supported and even import your own models by navigating to http://localhost:8000/#model-management.
 
@@ -103,24 +132,52 @@ cd file-assistant
 
 Let's then create a new `agent.json` file in the `file-assistant` folder.
 
+<hfoptions id="agent-file-config">
+<hfoption id="windows">
+
 ```json
-  {
-    "model": "user.jan-nano",
-    "endpointUrl": "http://localhost:8000/api/",
-    "servers": [
-      {
-        "type": "stdio",
-        "config": {
-          "command": "C:\\Program Files\\nodejs\\npx.cmd",
-          "args": [
-            "-y",
-            "@wonderwhy-er/desktop-commander"
-          ]
-        }
+{
+  "model": "user.jan-nano",
+  "endpointUrl": "http://localhost:8000/api/",
+  "servers": [
+    {
+      "type": "stdio",
+      "config": {
+        "command": "C:\\Program Files\\nodejs\\npx.cmd",
+        "args": [
+          "-y",
+          "@wonderwhy-er/desktop-commander"
+        ]
       }
-    ]
-  }
+    }
+  ]
+}
 ```
+
+</hfoption>
+<hfoption id="linux">
+
+```json
+{
+  "model": "user.jan-nano",
+  "endpointUrl": "http://localhost:8000/api/",
+  "servers": [
+    {
+      "type": "stdio",
+      "config": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@wonderwhy-er/desktop-commander"
+        ]
+      }
+    }
+  ]
+}
+```
+
+</hfoption>
+</hfoptions>
 
 Finally, we have to download the `Jan Nano` model. You can do this by navigating to http://localhost:8000/#model-management, clicking on `Add a Model` and providing the following information:
 
