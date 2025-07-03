@@ -36,7 +36,7 @@ source .venv/bin/activate
 
 Then, install the `lemonade-sdk` package:
 ```bash
-uv pip install lemonade-sdk==8.0.2
+uv pip install lemonade-sdk==8.0.3
 ```
 
 Altenatively, you can also install from source by cloning the repository and building the package:
@@ -233,7 +233,7 @@ Now, let's create a `candidates` folder inside the `file-assistant` folder and a
 
 ```bash
 mkdir candidates
-touch candidates/bruce_resume.md
+touch candidates/john_resume.md
 ```
 
 Add the following sample resume or include your own.
@@ -333,7 +333,7 @@ Agent loaded with 18 tools:
 Now let's provide the asistant with some info to get started. 
 
 ```
-» Read the contents of C:\Users\your_username\mcp-sentiment\job_description.md
+» Read the contents of C:\Users\your_username\file-assistant\job_description.md
 ```
 
 You should see the an output similar to the following:
@@ -352,25 +352,25 @@ The job description for the Senior Food Technology Engineer position emphasizes 
 Great! Now let's read the candidate's resume.
 
 ```
-» Inside the same folder you can find a candidates folder. Check for bruce_resume.md and let me know if he is a good fit for the job.
+» Inside the same folder you can find a candidates folder. Check for john_resume.md and let me know if he is a good fit for the job.
 ```
 
 You should see an output similar to the following:
 
 ```
-<Tool ll2oWo73YeGIft5VbOIpF9GNf0kevjEy>read_file {"path":"C:\\Users\\your_username\\file-assistant\\candidates\\bruce_resume.md"}
+<Tool ll2oWo73YeGIft5VbOIpF9GNf0kevjEy>read_file {"path":"C:\\Users\\your_username\\file-assistant\\candidates\\john_resume.md"}
 
 Tool ll2oWo73YeGIft5VbOIpF9GNf0kevjEy
 [Reading 58 lines from start]
 
 (...)
-Bruce Wayne is a **strong fit** for the Senior Food Technology Engineer role. His technical expertise in AI and machine learning, combined with his experience in food-related research and publications, makes him an excellent candidate. He also has the soft skills and cultural fit needed to thrive in a collaborative, innovative environment.
+John Wayne is a **strong fit** for the Senior Food Technology Engineer role. His technical expertise in AI and machine learning, combined with his experience in food-related research and publications, makes him an excellent candidate. He also has the soft skills and cultural fit needed to thrive in a collaborative, innovative environment.
 ```
 
 Amazing! Now we can move forward with inviting the candidate to the interview.
 
 ```
-» Create a file called "invitation.md" in the "file-assistant" folder and write a short invitation to Bruce to come in for an interview.
+» Create a file called "invitation.md" in the "file-assistant" folder and write a short invitation to John to come in for an interview.
 ```
 
 You should see content similar to the following being written to the `invitation.md` file:
