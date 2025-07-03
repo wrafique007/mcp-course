@@ -124,7 +124,7 @@ You can then choose from a variety of models to run on your local machine. For t
 
 ![Lemonade Server Interface](https://raw.githubusercontent.com/lemonade-sdk/assets/refs/heads/main/huggingface_course/hf_lemonade.png)
 
-Now let’s enhance our end-to-end application by enabling access to local files and introducing an assistant that processes sensitive information entirely on-device. Specifically, this assistant will help us evaluate candidate resumes and support decision-making in the hiring process—all while keeping the data private and secure.
+Now let's enhance our end-to-end application by enabling access to local files and introducing an assistant that processes sensitive information entirely on-device. Specifically, this assistant will help us evaluate candidate resumes and support decision-making in the hiring process—all while keeping the data private and secure.
 
 To do this, we'll use the [Desktop Commander](https://github.com/wonderwhy-er/desktop-commander) MCP server, which allows you to run commands on your local machine and provides comprehensive file system access, terminal control, and code editing capabilities.
 
@@ -132,7 +132,6 @@ Let's setup a project with a basic Tiny Agent.
 
 ```bash
 mkdir file-assistant
-touch file-assistant/agent.json
 cd file-assistant
 ```
 
@@ -192,6 +191,8 @@ Model Name: user.jan-nano
 Checkpoint: Menlo/Jan-nano-gguf:jan-nano-4b-Q4_0.gguf
 Recipe: llamacpp
 ```
+
+![Custom Model](https://raw.githubusercontent.com/lemonade-sdk/assets/refs/heads/main/huggingface_course/custom_model.png)
 
 All done! Now let's give it a try.
 
@@ -332,7 +333,7 @@ Agent loaded with 18 tools:
 Now let's provide the asistant with some info to get started. 
 
 ```
-» Read the contents of C:\Users\danie\mcp-sentiment\job_description.md
+» Read the contents of C:\Users\your_username\mcp-sentiment\job_description.md
 ```
 
 You should see the an output similar to the following:
