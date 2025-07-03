@@ -198,6 +198,8 @@ All done! Now let's give it a try.
 
 ### Taking it for a spin
 
+![recording](https://raw.githubusercontent.com/lemonade-sdk/assets/refs/heads/main/huggingface_course/recording.gif)
+
 Our goal is to create an assistant that can help us handle sensitive information locally. To do this, we'll first create a job description file for our assistant to work with.
 
 Create a file called `job_description.md` in the `file-assistant` folder.
@@ -302,7 +304,7 @@ Add the following sample resume or include your own.
 We can then run the agent with the following command:
 
 ```bash
-tiny-agents run
+tiny-agents run agent.json
 ```
 
 You should see the following output:
@@ -348,6 +350,12 @@ Tool iNtxGmOuXHqZVBWmKnfxsc61xsJbsoAM
 
 The job description for the Senior Food Technology Engineer position emphasizes the need for a candidate who can bridge the gap between food science and artificial intelligence (...). Candidates are also expected to attend conferences and publish research on algorithmic cooking optimization.
 ```
+
+<Tip>
+
+We are using the default system prompt, which may cause the assistant to call some tools multiple times. To create a more assertive assistant, you can provide a custom `PROMPT.md` file in the same directory as your `agent.json`.
+
+</Tip>
 
 Great! Now let's read the candidate's resume.
 
