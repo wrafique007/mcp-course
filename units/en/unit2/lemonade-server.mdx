@@ -65,7 +65,7 @@ Lemonade Server supports CPU inference across all platforms and engines on Windo
 
 ### Tiny Agents and NPX Setup
 
-This section of the course assumes you have already installed `npx` and `Tiny Agents`. If you haven't, please refer to the [Tiny Agents](https://huggingface.co/learn/mcp-course/en/unit2/tiny-agents) section of the course.
+This section of the course assumes you have already installed `npx` and `Tiny Agents`. If you haven't, please refer to the [Tiny Agents](https://huggingface.co/learn/mcp-course/en/unit2/tiny-agents) section of the course. Please make sure to use `huggingface_hub[mcp]>=0.33.2`.
 
 ## Running your Tiny Agents application with AMD NPU and iGPU
 
@@ -81,13 +81,11 @@ To run your Tiny Agents application with AMD NPU and iGPU, simply point to the M
   "servers": [
     {
       "type": "stdio",
-      "config": {
-        "command": "C:\\Program Files\\nodejs\\npx.cmd",
-        "args": [
-          "mcp-remote",
-          "http://localhost:7860/gradio_api/mcp/sse"
-        ]
-      }
+      "command": "C:\\Program Files\\nodejs\\npx.cmd",
+      "args": [
+        "mcp-remote",
+        "http://localhost:7860/gradio_api/mcp/sse"
+      ]
     }
   ]
 }
@@ -103,13 +101,11 @@ To run your Tiny Agents application with AMD NPU and iGPU, simply point to the M
   "servers": [
     {
       "type": "stdio",
-      "config": {
-        "command": "npx",
-        "args": [
-          "mcp-remote",
-          "http://localhost:7860/gradio_api/mcp/sse"
-        ]
-      }
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "http://localhost:7860/gradio_api/mcp/sse"
+      ]
     }
   ]
 }
@@ -147,13 +143,11 @@ Let's then create a new `agent.json` file in the `file-assistant` folder.
   "servers": [
     {
       "type": "stdio",
-      "config": {
-        "command": "C:\\Program Files\\nodejs\\npx.cmd",
-        "args": [
-          "-y",
-          "@wonderwhy-er/desktop-commander"
-        ]
-      }
+      "command": "C:\\Program Files\\nodejs\\npx.cmd",
+      "args": [
+        "-y",
+        "@wonderwhy-er/desktop-commander"
+      ]
     }
   ]
 }
@@ -169,13 +163,11 @@ Let's then create a new `agent.json` file in the `file-assistant` folder.
   "servers": [
     {
       "type": "stdio",
-      "config": {
-        "command": "npx",
-        "args": [
-          "-y",
-          "@wonderwhy-er/desktop-commander"
-        ]
-      }
+      "command": "npx",
+      "args": [
+        "-y",
+        "@wonderwhy-er/desktop-commander"
+      ]
     }
   ]
 }
